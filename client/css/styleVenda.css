@@ -87,6 +87,12 @@ hr{
     align-items: center;
     gap: 20px;
 }
+.titleProds{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
 
 .totalProds{
     font-family: 'Poppins', sans-serif;
@@ -121,6 +127,9 @@ hr{
     color: aliceblue;
 
 }
+.btnFinalizacao:disabled{
+    opacity: 0.8;
+}
 .modalBtn{
     border: none;
     border-radius: 20px;
@@ -134,8 +143,9 @@ hr{
 
 }
 
+
 /* MODAL */
-.modal{
+/* .modal{
     display: none;
     position: fixed;
     z-index: 1;
@@ -144,7 +154,7 @@ hr{
     width: 100%;
     height: 100%;
     background-color: #d6d6d6;
-}
+} */
 
 #listaProdutosModal{
     display: flex;

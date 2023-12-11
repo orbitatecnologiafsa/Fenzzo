@@ -1,98 +1,128 @@
 <!doctype html>
-<html lang="en">
-  <head>
+<html lang="pt-BR">
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fenzo Web </title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="./css/styleVenda.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <nav class="navbar">
-      <h1><a href="./index.html" class="tittle">FENZO</a></h1>
-    </nav>
+</head>
 
-    <section class="container ">
-        <form action="/vendas" id="formVendas">
-            <div class="inputVendedor">
+<body>
+    <div id="app">
+        <nav class="navbar">
+            <h1><a href="./index.html" class="tittle">FENZO</a></h1>
+        </nav>
+        <section class="container">
+            <form @submit.prevent="salvarVenda" id="formVendas">
+                <div class="inputVendedor">
+                    <div>
+                        <label for="vendedorInput" class="form-label">Vendedor</label>
+                        <input required ref="vendedor" type="text" class="form-control" id="vendedorInput">
+                    </div>
+                    <div>
+                        <label for="cnpjInput" class="form-label">CNPJ</label>
+                        <input ref="cnpj" type="text" class="form-control" v-mask="'##.###.###/####-##'" id="cnpjInput">
+                    </div>
+                    <div>
+                        <label for="clienteNomeInput" class="form-label">Nome do cliente</label>
+                        <input ref="clienteNome" type="text" class="form-control" id="clienteNomeInput">
+                    </div>
+                </div>
+                <hr>
                 <div>
-                    <label for="vendedorInput" class="form-label">Vendedor</label>
-                    <input type="text" class="form-control" id="vendedorInput">
+                    <h1 class="titleProds">Lista de produtos</h1>
+                    <ul class="listaProd">
+                        <li v-for="p in produtosSelecionados" :key="p.id" v-text="p.nome"></li>
+                    </ul>
+                    <div class="totalProds">
+                        <span>Valor total: <span v-text="total.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})"></span></span>
+                    </div>
                 </div>
-                <div>
-                    <label for="cnpjInput" class="form-label">CNPJ</label>
-                    <input type="text" class="form-control" id="cnpjInput" >
-                </div>
-                <div>
-                    <label for="clienteNomeInput" class="form-label">Nome do cliente</label>
-                    <input type="text" class="form-control" id="clienteNomeInput" >
-                </div>
-            </div>
-            <hr>
-            <div>
-                <h1>Lista de produtos</h1>
-                <ul class="listaProd" id="listaProdsID">
-                    
-                </ul>
-                <div class="totalProds">
-                    <span >Valor total: R$ ###,##</span>
-                </div>
-            </div>
-            <div class="botaoDiv">
-                <button class="btnFinalizacao" id="enviarVendasBtn">
-                    <span>Finalizar</span>
-                </button>
-            </div>
-        
-        <div class="botaoDivModal">
-            <button class="modalBtn">
-                <span>Adicionar</span>
-            </button>
-        </div>
-        <hr>    
-            <div class="inputVendedor">
-                <div>
-                    <label for="cepInput" class="form-label">CEP</label>
-                    <input type="text" class="form-control" id="cepInput">
-                </div>
-                <div>
-                    <label for="addressInput" class="form-label">Endereço</label>
-                    <input type="text" class="form-control" id="addressInput">
-                </div>
-                <div>
-                    <label for="UFinput" class="form-label">UF</label>
-                    <input type="text" class="form-control" id="UFinput">
-                </div>
-                <div>
-                    <label for="cidadeInput" class="form-label">Cidade</label>
-                    <input type="text" class="form-control" id="cidadeInput">
-                </div>
-                <div>
-                    <label for="telefoneInput" class="form-label">Telefone </label>
-                    <input type="text" class="form-control" id="telefoneInput">
-                </div>
-            </div>
-        </form>
-        
-        
-        
-    </section>
-    <div class="modal">
-        <div id="listaProdutosModal">
-            <h1>Lista de produtos</h1>
-            <ul id="listaProdModal">
-            </ul>
-        </div>
-    </div>
 
-    <script src="./vendas.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+                <div class="botaoDivModal">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="modalBtn">
+                        <span>Adicionar</span>
+                    </button>
+                </div>
+
+                <hr>
+                <div class="inputVendedor">
+                    <div>
+                        <label for="cepInput" class="form-label">CEP</label>
+                        <input ref="cep" type="text" class="form-control" id="cepInput" v-mask="'#####-###'">
+                    </div>
+                    <div>
+                        <label for="addressInput" class="form-label">Endereço</label>
+                        <input ref="address" type="text" class="form-control" id="addressInput">
+                    </div>
+                    <div>
+                        <label for="UFinput" class="form-label">UF</label>
+                        <input ref="uf" type="text" class="form-control" id="UFinput" maxlength="2">
+                    </div>
+                    <div>
+                        <label for="cidadeInput" class="form-label">Cidade</label>
+                        <input ref="city" type="text" class="form-control" id="cidadeInput">
+                    </div>
+                    <div>
+                        <label for="telefoneInput" class="form-label">Telefone </label>
+                        <input ref="phone" type="text" class="form-control" id="telefoneInput" v-mask="'(##) #####-####'">
+                    </div>
+                </div>
+                <div class="botaoDiv">
+                    <button :disabled="produtosSelecionados.length == 0" type="submit" class="btnFinalizacao">
+                        <span>Finalizar</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+           <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                            <div v-for="produto in produtos" class="input-group mb-3">
+                                <div class="input-group-text">
+                                <input v-model="produtosSelecionados" :value="{id: produto.id, nome: produto.nome, preco: produto.preco}" class="form-check-input mt-0" type="checkbox" aria-label="Checkbox for following text input">
+                                </div>
+                                <input :value="produto.nome + ' - ' + produto.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})" type="text" class="form-control" aria-label="Text input with checkbox" disabled>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>  <!--  Final do vue -->
+ 
+    
+
+        <!-- Vue 2 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="./js/vuemask.js"></script>
+
+    <script src="./js/app.js"></script>
+    <!-- <script src="./vendas.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="module" src="./DomConfig.js"></script>
-  </body>
+    <!-- <script type="module" src="./DomConfig.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+
 </html>
 
 
