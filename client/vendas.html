@@ -38,10 +38,11 @@
                 <div>
                     <h1 class="titleProds">Lista de produtos</h1>
                     <ul class="listaProd">
-                        <li v-for="p in produtosSelecionados" :key="p.id" v-text="p.nome"></li>
+                        <li v-for="p in produtosSelecionados" :key="p.id" v-text="p.nome + ' - ' + p.qtd"></li>
                     </ul>
                     <div class="totalProds">
                         <span>Valor total: <span v-text="total.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})"></span></span>
+                        <input type="text" class="form-control" id="descontoInput" v-model="desconto" v-mask="'##'"><input type="button" class="descontoBtn" @click="aplicarDesconto()" value="Adicionar">
                     </div>
                 </div>
 
@@ -63,7 +64,12 @@
                     </div>
                     <div>
                         <label for="UFinput" class="form-label">UF</label>
-                        <input ref="uf" type="text" class="form-control" id="UFinput" maxlength="2">
+                        <select ref="uf" class="form-select" aria-label="Default select example" id="UFinput">
+                            <option selected>UF</option>
+                            <option value="1">BA</option>
+                            <option value="2">SP</option>
+                            <option value="3">RJ</option>
+                          </select>
                     </div>
                     <div>
                         <label for="cidadeInput" class="form-label">Cidade</label>
@@ -71,7 +77,7 @@
                     </div>
                     <div>
                         <label for="telefoneInput" class="form-label">Telefone </label>
-                        <input ref="phone" type="text" class="form-control" id="telefoneInput" v-mask="'(##) #####-####'">
+                        <input ref="phone" type="text" class="form-control" id="telefoneInput" v-mask="'#####-####'">
                     </div>
                 </div>
                 <div class="botaoDiv">
@@ -92,9 +98,10 @@
                         <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
                             <div v-for="produto in produtos" class="input-group mb-3">
                                 <div class="input-group-text">
-                                <input v-model="produtosSelecionados" :value="{id: produto.id, nome: produto.nome, preco: produto.preco}" class="form-check-input mt-0" type="checkbox" aria-label="Checkbox for following text input">
+                                <input v-model="produtosSelecionados" :value="{id: produto.id, nome: produto.nome, preco: produto.preco, qtd: produto.qtd, estoque: produto.estoque}" class="form-check-input mt-0" type="checkbox" aria-label="Checkbox for following text input">
                                 </div>
-                                <input :value="produto.nome + ' - ' + produto.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})" type="text" class="form-control" aria-label="Text input with checkbox" disabled>
+                                <input :value="produto.nome + ' - ' + produto.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) + ' - ' + produto.estoque" type="text" class="form-control" aria-label="Text input with checkbox" disabled>
+                                <input v-model="produto.qtd" type="number" class="form-control-qtd" min="1" :max="produto.estoque" :value="1">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -110,11 +117,8 @@
         <!-- Vue 2 -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="./js/vuemask.js"></script>
-
     <script src="./js/app.js"></script>
-    <!-- <script src="./vendas.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <!-- <script type="module" src="./DomConfig.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>
@@ -125,25 +129,3 @@
 
 </html>
 
-
-
-<!-- <li class="produto">
-    <h2>Produto 1</h2>
-    <span class="preco">R$ 19,99</span>
-    <span>Quantidade: 12</span>
-</li>
-<li class="produto">
-    <h2>Produto 2</h2>
-    <span class="preco">R$ 19,99</span>
-    <span>Quantidade: 12</span>
-</li>
-<li class="produto">
-    <h2>Produto 3</h2>
-    <span class="preco">R$ 19,99</span>
-    <span>Quantidade: 12</span>
-</li>
-<li class="produto">
-    <h2>Produto 4</h2>
-    <span class="preco">R$ 19,99</span>
-    <span>Quantidade: 12</span>
-</li> -->

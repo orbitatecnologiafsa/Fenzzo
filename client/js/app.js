@@ -4,6 +4,7 @@ new Vue({
     data: {
       produtos: [],
       total: 0,
+      desconto: 0,
       produtosSelecionados: [],
       endereco: {
         logradouro: '',
@@ -30,8 +31,17 @@ new Vue({
           calcularTotal(){
             this.total = 0;
             this.produtosSelecionados.forEach(produto => {
-                this.total += produto.preco;
+                this.total += produto.preco * produto.qtd
             });
+          },
+          aplicarDesconto() {
+            const valorDesconto = parseFloat(this.desconto)/100 * this.total;
+            console.log(valorDesconto);
+            if (valorDesconto === 0 || isNaN(valorDesconto)) {
+              return this.total             
+            } else{
+              this.total = this.total - valorDesconto;
+            }
           },
           async salvarVenda(){
 
@@ -44,20 +54,20 @@ new Vue({
                 clienteUF: this.$refs.uf.value,
                 clienteCidade: this.$refs.city.value,
                 clienteTelefone: this.$refs.phone.value,
-                produtos: this.produtosSelecionados,
+                itensVenda: this.produtosSelecionados,
                 total: this.total
             }
-            // const config = {
-            //     headers: {
-            //     'Content-Type': 'Application/json'
-            //   },
-            //   method:'POST',
-            //   body: JSON.stringify(obj),
-            // }
+            const config = {
+                headers: {
+                'Content-Type': 'Application/json'
+              },
+              method:'POST',
+              body: JSON.stringify(obj),
+            }
 
-            // const response = await fetch(`${URL}/vendas`,config);
-            // const data = await response.json();
-
+            const response = await fetch(`${URL}/vendas`,config);
+            const data = await response.json();
+            return data
           },
           async consultarCEP() {
             const cep = this.cep.replace(/\D/g, '');
@@ -87,10 +97,13 @@ new Vue({
         this.getProdutos();
     },
     watch: {
-        produtosSelecionados(){
-            this.calcularTotal();
-        }
-
+      produtosSelecionados: {
+        handler: function () {
+          this.calcularTotal();
+        }, 
+        deep: true // Este é o ponto crucial para garantir a detecção de mudanças profundas
+      },
+      desconto: 'aplicarDesconto'
     }
 
 });

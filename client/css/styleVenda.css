@@ -233,3 +233,23 @@ hr{
     justify-content: center;
     text-decoration: none;
 }
+
+#descontoInput{
+    width: 100px;
+    border-radius: 10px;
+    padding-left: 5px;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.descontoBtn{
+    border: none;
+    border-radius: 20px;
+    background: rgb(160,125,100);
+    background: linear-gradient(171deg,rgba(184,104,48,1) 40%,  rgba(160,125,100,1) 100%);
+    width: 5rem;
+    height: 2rem;
+    font-size: 0.85rem;
+    font-family: 'Poppins', sans-serif;
+    color: aliceblue;
+}
