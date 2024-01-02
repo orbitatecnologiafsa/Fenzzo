@@ -5,6 +5,7 @@ new Vue({
       produtos: [],
       total: 0,
       desconto: 0,
+      search: '',
       produtosSelecionados: [],
       endereco: {
         logradouro: '',
@@ -14,6 +15,9 @@ new Vue({
       }
     },
     methods: {
+        console(){
+          console.log(this.quantidade);
+        },
         async getProdutos(){
 
             const config = {
@@ -31,8 +35,18 @@ new Vue({
           calcularTotal(){
             this.total = 0;
             this.produtosSelecionados.forEach(produto => {
-                this.total += produto.preco * produto.qtd
+                this.total += produto.preco * parseFloat(produto.quantidade);
             });
+          },
+         adicionarProduto(index){
+            this.produtosSelecionados.push({
+              nome: this.produtos[index].nome,
+              preco: this.produtos[index].preco,
+              estoque: this.produtos[index].estoque,
+              quantidade: parseInt(this.produtos[index].quantidade = prompt('Quantidade')),
+            });
+            console.log(this.produtosSelecionados);
+            this.calcularTotal();
           },
           aplicarDesconto() {
             const valorDesconto = parseFloat(this.desconto)/100 * this.total;
@@ -41,6 +55,16 @@ new Vue({
               return this.total             
             } else{
               this.total = this.total - valorDesconto;
+            }
+          },
+          pesquisarProduto(val){
+            this.search = val;
+            console.log(this.search);
+            console.log(val);
+            if (this.search.length === 0) {
+              this.getProdutos();
+            } else {
+              this.produtos = this.produtos.filter(item => item.nome.toLowerCase().includes(this.search.toLowerCase()));
             }
           },
           async salvarVenda(){
@@ -103,7 +127,7 @@ new Vue({
         }, 
         deep: true // Este é o ponto crucial para garantir a detecção de mudanças profundas
       },
-      desconto: 'aplicarDesconto'
+      search: 'pesquisarProduto'
     }
 
 });

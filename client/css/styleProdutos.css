@@ -1,0 +1,9 @@
+body{
+  background: rgb(160,125,100);
+  background: linear-gradient(171deg, rgba(160,125,100,1) 0%, rgba(184,104,48,1) 100%);
+}
+.tittle{
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  font-size: 4.5rem
+}

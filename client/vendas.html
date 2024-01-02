@@ -20,29 +20,74 @@
         </nav>
         <section class="container">
             <form @submit.prevent="salvarVenda" id="formVendas">
-                <div class="inputVendedor">
-                    <div>
+                <div class="inputVendedor" style="row-gap: 0;">
+                    <div class="grid1">
                         <label for="vendedorInput" class="form-label">Vendedor</label>
                         <input required ref="vendedor" type="text" class="form-control" id="vendedorInput">
                     </div>
-                    <div>
+                    <div class="grid2">
                         <label for="cnpjInput" class="form-label">CNPJ</label>
                         <input ref="cnpj" type="text" class="form-control" v-mask="'##.###.###/####-##'" id="cnpjInput">
                     </div>
-                    <div>
+                    <div class="grid3">
                         <label for="clienteNomeInput" class="form-label">Nome do cliente</label>
                         <input ref="clienteNome" type="text" class="form-control" id="clienteNomeInput">
+                    </div>
+                    <div class="grid4">
+                        <label for="cepInput" class="form-label">CEP</label>
+                        <input ref="cep" type="text" class="form-control" id="cepInput" v-mask="'#####-###'">
+                    </div>
+                    <div class="grid5">
+                        <label for="addressInput" class="form-label">Endereço</label>
+                        <input ref="address" type="text" class="form-control" id="addressInput">
+                    </div>
+                    <div class="grid6">
+                        <label for="UFinput" class="form-label">UF</label>
+                        <select ref="uf" class="form-select selectUF" aria-label="Default select example" id="UFinput">
+                            <option selected>UF</option>
+                            <option value="1">BA</option>
+                            <option value="2">SP</option>
+                            <option value="3">RJ</option>
+                          </select>
+                    </div>
+                    <div class="grid7">
+                        <label for="cidadeInput" class="form-label">Cidade</label>
+                        <input ref="city" type="text" class="form-control" id="cidadeInput">
+                    </div>
+                    <div class="grid8">
+                        <label for="telefoneInput" class="form-label">Telefone </label>
+                        <input ref="phone" type="text" class="form-control" id="telefoneInput" v-mask="'#####-####'">
                     </div>
                 </div>
                 <hr>
                 <div>
                     <h1 class="titleProds">Lista de produtos</h1>
-                    <ul class="listaProd">
-                        <li v-for="p in produtosSelecionados" :key="p.id" v-text="p.nome + ' - ' + p.qtd"></li>
-                    </ul>
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Cod.Produto</th>
+                            <th scope="col">Produto</th>
+                            <th scope="col">Quantidade</th>
+                            <th scope="col">Preço Unit.</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="p in produtosSelecionados" :key="p.id">
+                            <th scope="row">1</th>
+                            <td v-text="p.nome"></td>
+                            <td v-text="p.quantidade"></td>
+                            <td v-text="p.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})"></td>
+                          </tr>
+                          
+                        </tbody>
+                      </table>
+                    <!-- <ul class="listaProd">
+                        <li v-for="p in produtosSelecionados" :key="p.id" v-text="p.nome + ' - ' + p.quantidade"></li>
+                    </ul> -->
                     <div class="totalProds">
                         <span>Valor total: <span v-text="total.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})"></span></span>
-                        <input type="text" class="form-control" id="descontoInput" v-model="desconto" v-mask="'##'"><input type="button" class="descontoBtn" @click="aplicarDesconto()" value="Adicionar">
+                        <input type="text" class="form-control desconto" v-model="desconto" v-mask="'##'"><input type="button" class="descontoBtn" @click="aplicarDesconto()" value="Adicionar">
+
                     </div>
                 </div>
 
@@ -51,35 +96,7 @@
                         <span>Adicionar</span>
                     </button>
                 </div>
-
                 <hr>
-                <div class="inputVendedor">
-                    <div>
-                        <label for="cepInput" class="form-label">CEP</label>
-                        <input ref="cep" type="text" class="form-control" id="cepInput" v-mask="'#####-###'">
-                    </div>
-                    <div>
-                        <label for="addressInput" class="form-label">Endereço</label>
-                        <input ref="address" type="text" class="form-control" id="addressInput">
-                    </div>
-                    <div>
-                        <label for="UFinput" class="form-label">UF</label>
-                        <select ref="uf" class="form-select" aria-label="Default select example" id="UFinput">
-                            <option selected>UF</option>
-                            <option value="1">BA</option>
-                            <option value="2">SP</option>
-                            <option value="3">RJ</option>
-                          </select>
-                    </div>
-                    <div>
-                        <label for="cidadeInput" class="form-label">Cidade</label>
-                        <input ref="city" type="text" class="form-control" id="cidadeInput">
-                    </div>
-                    <div>
-                        <label for="telefoneInput" class="form-label">Telefone </label>
-                        <input ref="phone" type="text" class="form-control" id="telefoneInput" v-mask="'#####-####'">
-                    </div>
-                </div>
                 <div class="botaoDiv">
                     <button :disabled="produtosSelecionados.length == 0" type="submit" class="btnFinalizacao">
                         <span>Finalizar</span>
@@ -92,16 +109,18 @@
                 <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Produtos</h1>
+                            <input type="text" placeholder="Pesquisar" class="form-control" style="margin-left: 20px;" v-model="search">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
-                            <div v-for="produto in produtos" class="input-group mb-3">
-                                <div class="input-group-text">
-                                <input v-model="produtosSelecionados" :value="{id: produto.id, nome: produto.nome, preco: produto.preco, qtd: produto.qtd, estoque: produto.estoque}" class="form-check-input mt-0" type="checkbox" aria-label="Checkbox for following text input">
-                                </div>
-                                <input :value="produto.nome + ' - ' + produto.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) + ' - ' + produto.estoque" type="text" class="form-control" aria-label="Text input with checkbox" disabled>
-                                <input v-model="produto.qtd" type="number" class="form-control-qtd" min="1" :max="produto.estoque" :value="1">
+                            <div v-for="(produto, index) in produtos" class="input-group mb-3">
+                                <input :value="produto.nome + ' - ' + produto.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) + ' - ' + produto.estoque" 
+                                type="button" 
+                                class="form-control" 
+                                aria-label="Text input with checkbox"
+                                v-on:click="adicionarProduto(index)">
+
                             </div>
                         </div>
                         <div class="modal-footer">
