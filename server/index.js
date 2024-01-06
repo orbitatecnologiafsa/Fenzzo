@@ -77,8 +77,8 @@ app.post('/vendas', (request, response) => {
             
           );
           db.query(
-            'INSERT INTO PEDIDOS_ITENS_GRADE (CODIGO, REFERENCIA, EMPRESA, COR_ID, COR, TAMANHO_ID) VALUES (?, ?, ?, ?, ?, ?)',
-            [idVenda, item.referencia , 1, item.idCor, item.cor, 26],
+            'INSERT INTO PEDIDOS_ITENS_GRADE (IDX, CODIGO, REFERENCIA, EMPRESA, COR_ID, COR, TAMANHO_ID) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [idVenda, idVenda, item.referencia , 1, item.idCor, item.cor, 26],
             (err, result) => {
               if (err) {
                 console.log('Dados depois da execução da query: ', [idVenda, item.referencia , 1, item.idCor, item.cor, 26]);
@@ -90,6 +90,7 @@ app.post('/vendas', (request, response) => {
             }
             
           );
+          console.log('Dados depois da execução da query: ', [idVenda, item.referencia , 1, item.idCor, item.cor, 26]);
         });
 
         response.send('Dados inseridos com sucesso');

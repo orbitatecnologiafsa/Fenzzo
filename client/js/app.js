@@ -118,7 +118,6 @@ new Vue({
                 qtdeUnitaria: this.produtosSelecionados.length,
                 itensVenda: this.produtosSelecionados,
                 total: this.total,
-                
             }
             const config = {
                 headers: {
