@@ -7,16 +7,12 @@ new Vue({
       desconto: 0,
       search: '',
       produtosSelecionados: [],
-      endereco: {
-        logradouro: '',
-        bairro: '',
-        cidade: '',
-        estado: ''    
-      }
+      dadosClientes: [],
+      vendedores: [],
     },
     methods: {
         console(){
-          console.log(this.quantidade);
+          console.log(this.dadosClientes);
         },
         async getProdutos(){
 
@@ -30,6 +26,7 @@ new Vue({
             const response = await fetch(`${URL}/produtos`,config);
             const data = await response.json();
             this.produtos = data;
+            console.log(this.produtos);
 
           },
           calcularTotal(){
@@ -38,25 +35,68 @@ new Vue({
                 this.total += produto.preco * parseFloat(produto.quantidade);
             });
           },
+      
          adicionarProduto(index){
             this.produtosSelecionados.push({
+              id: this.produtos[index].id,
               nome: this.produtos[index].nome,
               preco: this.produtos[index].preco,
-              estoque: this.produtos[index].estoque,
+              referencia: this.produtos[index].referencia,
               quantidade: parseInt(this.produtos[index].quantidade = prompt('Quantidade')),
+              idCor: this.produtos[index].idCor,
+              cor: this.produtos[index].cor,
             });
             console.log(this.produtosSelecionados);
             this.calcularTotal();
           },
-          aplicarDesconto() {
-            const valorDesconto = parseFloat(this.desconto)/100 * this.total;
-            console.log(valorDesconto);
-            if (valorDesconto === 0 || isNaN(valorDesconto)) {
-              return this.total             
-            } else{
-              this.total = this.total - valorDesconto;
-            }
+
+        async getClientes(){
+
+          const config = {
+              headers: {
+                'Content-Type': 'Application/json'
+              },
+              method: 'GET'
+          }
+
+          const response = await fetch(`${URL}/clientes`, config);
+          const data =  await response.json();
+          this.dadosClientes = data;
+          console.log(this.dadosClientes);
+          
+
+        },
+        async getVendedor(){
+
+          const config = {
+              headers: {
+                'Content-Type': 'Application/json'
+              },
+              method: 'GET'
+          }
+
+          const response = await fetch(`${URL}/vendedores`, config);
+          const data =  await response.json();
+          this.vendedores = data;
+          console.log(this.vendedores);
+          
+
+        },
+
+          aplicarDesconto(index) {
+            const idDesconto = 'descontos_' + index;
+            const valorDesconto = document.getElementById(idDesconto).value;
+            const precoInicial = this.produtosSelecionados[index].preco * this.produtosSelecionados[index].quantidade;
+            console.log(this.produtosSelecionados[index].quantidade);
+
+            this.desconto = parseFloat(valorDesconto)/100;
+            console.log(this.desconto);
+            const valorFinal =  precoInicial * this.desconto;
+            console.log(valorFinal);
+            this.total = this.total - valorFinal;
+            document.getElementById(idDesconto).value = '';
           },
+
           pesquisarProduto(val){
             this.search = val;
             console.log(this.search);
@@ -68,18 +108,17 @@ new Vue({
             }
           },
           async salvarVenda(){
-
+            console.log(this.produtosSelecionados);
+            const quantidadeTotaldeProdutos = this.produtosSelecionados.reduce((total, item) => total + item.quantidade, 0);
             const obj = {
-                vendedor: this.$refs.vendedor.value,
+                codigoCliente: this.dadosClientes.find(cli => cli.nome === this.$refs.clienteNome.value).id,
+                vendedor: this.vendedores.find(ven => ven.nome === this.$refs.vendedor.value).id,
                 cnpj: this.$refs.cnpj.value,
-                clienteNome: this.$refs.clienteNome.value,
-                clienteCEP: this.$refs.cep.value,
-                clienteEndereco: this.$refs.address.value,
-                clienteUF: this.$refs.uf.value,
-                clienteCidade: this.$refs.city.value,
-                clienteTelefone: this.$refs.phone.value,
+                qtde_produtos: quantidadeTotaldeProdutos,
+                qtdeUnitaria: this.produtosSelecionados.length,
                 itensVenda: this.produtosSelecionados,
-                total: this.total
+                total: this.total,
+                
             }
             const config = {
                 headers: {
@@ -93,32 +132,31 @@ new Vue({
             const data = await response.json();
             return data
           },
-          async consultarCEP() {
-            const cep = this.cep.replace(/\D/g, '');
+          selecionarCliente() {
+            const clienteSelecionado = this.dadosClientes.find(cli => cli.nome === this.$refs.clienteNome.value);
       
-            if (cep.length !== 8) {
-              console.error('CEP inválido');
-              return;
+            if (clienteSelecionado) {
+              // Preencher os outros campos com os dados do cliente
+              this.$refs.cnpj.value = clienteSelecionado.cnpj;
+              this.$refs.address.value = clienteSelecionado.cep + " - " + clienteSelecionado.endereco + ", " + clienteSelecionado.numero + ", " + clienteSelecionado.bairro;
+              this.$refs.city.value = clienteSelecionado.cidade + " - " + clienteSelecionado.uf;
+              this.$refs.phone.value = clienteSelecionado.telefone;
+              
+            } else {
+              this.$refs.cnpj.value = '';
+              this.$refs.address.value = '';
+              this.$refs.city.value = '';
+              this.$refs.phone.value = '';
             }
-      
-            const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-            const data = await response.json();
-      
-            if (data.erro) {
-              console.error('CEP não encontrado');
-              return;
             }
+          },
       
-            this.endereco = {
-              logradouro: data.logradouro,
-              bairro: data.bairro,
-              cidade: data.localidade,
-              estado: data.uf
-            };
-          }
-    },
+    
     mounted(){
         this.getProdutos();
+        this.getClientes();
+        this.getVendedor();
+        
     },
     watch: {
       produtosSelecionados: {

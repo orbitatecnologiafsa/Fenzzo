@@ -1,8 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fenzo Web </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -16,47 +16,46 @@
 <body>
     <div id="app">
         <nav class="navbar">
-            <h1><a href="./index.html" class="tittle">FENZO</a></h1>
+            <h1><a href="./index.html" class="tittle">FENZZO</a></h1>
         </nav>
         <section class="container">
             <form @submit.prevent="salvarVenda" id="formVendas">
+                
                 <div class="inputVendedor" style="row-gap: 0;">
-                    <div class="grid1">
-                        <label for="vendedorInput" class="form-label">Vendedor</label>
-                        <input required ref="vendedor" type="text" class="form-control" id="vendedorInput">
+                    <div class="grid3">
+                        <label for="exampleDataList" class="form-label">Vendedor</label>
+                        <input class="form-control" ref="vendedor" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
+                        <datalist id="datalistOptions" >
+                        <option v-for="vend in vendedores" :value="vend.nome"></option>
+                        </datalist>
                     </div>
                     <div class="grid2">
                         <label for="cnpjInput" class="form-label">CNPJ</label>
-                        <input ref="cnpj" type="text" class="form-control" v-mask="'##.###.###/####-##'" id="cnpjInput">
+                        <input ref="cnpj" type="text" class="form-control" v-mask="'##.###.###/####-##'" id="cnpjInput" placeholder="CNPJ" readonly>
                     </div>
-                    <div class="grid3">
-                        <label for="clienteNomeInput" class="form-label">Nome do cliente</label>
-                        <input ref="clienteNome" type="text" class="form-control" id="clienteNomeInput">
+                    <div class="grid1">
+                        <label for="exampleDataList1" class="form-label">Nome do Cliente</label>
+                        <input class="form-control" ref="clienteNome" list="datalistOptions1" id="exampleDataList1" @input="selecionarCliente" placeholder="Type to search...">
+                        <datalist id="datalistOptions1" >
+                        <option v-for="cli in dadosClientes" :value="cli.nome"></option>
+                        </datalist>
                     </div>
                     <div class="grid4">
-                        <label for="cepInput" class="form-label">CEP</label>
-                        <input ref="cep" type="text" class="form-control" id="cepInput" v-mask="'#####-###'">
-                    </div>
-                    <div class="grid5">
                         <label for="addressInput" class="form-label">Endereço</label>
                         <input ref="address" type="text" class="form-control" id="addressInput">
+                        <!-- <label for="cepInput" class="form-label">CEP</label>
+                        <input ref="cep" type="text" class="form-control" id="cepInput" v-mask="'#####-###'"> -->
                     </div>
-                    <div class="grid6">
-                        <label for="UFinput" class="form-label">UF</label>
-                        <select ref="uf" class="form-select selectUF" aria-label="Default select example" id="UFinput">
-                            <option selected>UF</option>
-                            <option value="1">BA</option>
-                            <option value="2">SP</option>
-                            <option value="3">RJ</option>
-                          </select>
-                    </div>
-                    <div class="grid7">
+                    <div class="grid5">
                         <label for="cidadeInput" class="form-label">Cidade</label>
                         <input ref="city" type="text" class="form-control" id="cidadeInput">
+                        
                     </div>
-                    <div class="grid8">
+                    <div class="grid6">
                         <label for="telefoneInput" class="form-label">Telefone </label>
                         <input ref="phone" type="text" class="form-control" id="telefoneInput" v-mask="'#####-####'">
+                    </div>
+                    <div class="grid7">
                     </div>
                 </div>
                 <hr>
@@ -68,31 +67,37 @@
                             <th scope="col">Cod.Produto</th>
                             <th scope="col">Produto</th>
                             <th scope="col">Quantidade</th>
+                            <th scope="col">Cor</th>
                             <th scope="col">Preço Unit.</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Desconto</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr v-for="p in produtosSelecionados" :key="p.id">
-                            <th scope="row">1</th>
+                          <tr v-for="(p, index) in produtosSelecionados" :key="p.id">
+                            <th scope="row">{{ p.referencia }}</th>
                             <td v-text="p.nome"></td>
                             <td v-text="p.quantidade"></td>
-                            <td v-text="p.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})"></td>
+                            <td v-text="p.cor"></td>
+                            <td v-text="p.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})" id="precos"></td>
+                            <td v-text="(p.preco * p.quantidade).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})"></td>
+                            <td class="abaDesconto">
+                                <input type="text" class="form-control desconto" :id="'descontos_' + index" v-mask="'##'">
+                                <input type="button" class="descontoBtn" @click="aplicarDesconto(index)" value="+">
+                            </td>    
                           </tr>
                           
                         </tbody>
                       </table>
-                    <!-- <ul class="listaProd">
-                        <li v-for="p in produtosSelecionados" :key="p.id" v-text="p.nome + ' - ' + p.quantidade"></li>
-                    </ul> -->
                     <div class="totalProds">
                         <span>Valor total: <span v-text="total.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})"></span></span>
-                        <input type="text" class="form-control desconto" v-model="desconto" v-mask="'##'"><input type="button" class="descontoBtn" @click="aplicarDesconto()" value="Adicionar">
+                        
 
                     </div>
                 </div>
 
                 <div class="botaoDivModal">
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="modalBtn">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"  class="modalBtn">
                         <span>Adicionar</span>
                     </button>
                 </div>
@@ -114,13 +119,13 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                            
                             <div v-for="(produto, index) in produtos" class="input-group mb-3">
-                                <input :value="produto.nome + ' - ' + produto.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) + ' - ' + produto.estoque" 
+                                <input :value="produto.nome + ' - ' + produto.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) + ' - ' + produto.cor" 
                                 type="button" 
-                                class="form-control" 
+                                class="modalConfig form-control" 
                                 aria-label="Text input with checkbox"
-                                v-on:click="adicionarProduto(index)">
-
+                                @click="adicionarProduto(index)">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -129,6 +134,8 @@
                     </div>
                 </div>
             </div>
+             <!--Final do Modal -->
+           
     </div>  <!--  Final do vue -->
  
     
@@ -148,3 +155,4 @@
 
 </html>
 
+<!-- v-on:click="adicionarProduto(index)" -->

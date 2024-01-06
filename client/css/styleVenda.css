@@ -7,29 +7,34 @@ body{
 
 .container{
     display: flex;
-    margin: 0 5rem 0 5rem;
+    justify-content: center;
     max-width: fit-content;
     background: rgb(230,230,230);
     background: linear-gradient(180deg, rgba(230,230,230,1) 0%, rgba(209,233,254,1) 100%);
     padding: 5rem;
     border-radius: 20px;
 }
+
+
 .inputVendedor{
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    grid-column-gap: 32px;
-    grid-row-gap: 32px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 0.5fr);
+    grid-column-gap: 25px;
+    grid-row-gap: 40px;
 }
-.grid1 { grid-area: 1 / 2 / 2 / 3; }
-.grid2 { grid-area: 1 / 3 / 2 / 4; }
-.grid3 { grid-area: 1 / 4 / 2 / 5; }
-.grid4 { grid-area: 2 / 2 / 3 / 3; }
-.grid5 { grid-area: 2 / 3 / 3 / 4; }
-.grid6 { grid-area: 2 / 4 / 3 / 5; 
-    align-items: center;}
-.grid7 { grid-area: 3 / 2 / 4 / 3; }
-.grid8 { grid-area: 3 / 4 / 4 / 4; }
+
+    .grid1 { grid-area: 1 / 1 / 2 / 2; }
+    .grid2 { grid-area: 1 / 2 / 2 / 3; }
+    .grid3 { grid-area: 1 / 3 / 2 / 4; }
+    .grid4 { grid-area: 2 / 1 / 3 / 4; }
+    .grid5 { grid-area: 3 / 1 / 4 / 2; }
+    .grid6 { grid-area: 3 / 2 / 4 / 3; }
+    .grid7 { grid-area: 3 / 3 / 4 / 4; }
+
+#addressInput{
+    width: 48rem;
+}
 .form-label{
     font-size: 1.5rem;
     font-family: 'Poppins', sans-serif;
@@ -39,7 +44,7 @@ body{
     width: 15rem;
 }
 .desconto{
-    width: 6rem;
+    width: 4rem;
     margin: 0 1rem 0 1rem;
 }
 .navbar{
@@ -48,6 +53,9 @@ body{
 }
 
 .tittle{
+    display: flex;
+    justify-content: center;
+
     text-decoration: none;
     color: rgb(255, 255, 255);
     font-size: 4.5rem
@@ -264,14 +272,20 @@ hr{
     border-radius: 20px;
     background: rgb(160,125,100);
     background: linear-gradient(171deg,rgba(184,104,48,1) 40%,  rgba(160,125,100,1) 100%);
-    width: 5rem;
+    width: 2.5rem;
     height: 2rem;
-    font-size: 0.85rem;
+    font-size: 1.5rem;
+    padding: unset;
     font-family: 'Poppins', sans-serif;
     color: aliceblue;
 }
 
 .selectUF{
     width: min-content;
+    align-items: center;
+}
+
+.abaDesconto{
+    display: flex;
     align-items: center;
 }

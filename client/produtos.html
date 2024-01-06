@@ -18,8 +18,10 @@
         <nav class="navbar">
             <h1><a href="./index.html" class="tittle">FENZO</a></h1>
         </nav>
-        <main>
-
+        <main class="main">
+            <ul class="listProd">
+              <li v-for="p in listaProdutos" :key="p.id" v-text="p.nome + '-' + p.preco"></li>
+            </ul>
         </main>
     </div>  <!--  Final do vue -->
  
