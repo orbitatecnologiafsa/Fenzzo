@@ -66,8 +66,8 @@
                           <tr>
                             <th scope="col">Cod.Produto</th>
                             <th scope="col">Produto</th>
-                            <th scope="col">Quantidade</th>
                             <th scope="col">Cor</th>
+                            <th scope="col">Quantidade</th>
                             <th scope="col">Preço Unit.</th>
                             <th scope="col">Total</th>
                             <th scope="col">Desconto</th>
@@ -77,8 +77,8 @@
                           <tr v-for="(p, index) in produtosSelecionados" :key="p.id">
                             <th scope="row">{{ p.referencia }}</th>
                             <td v-text="p.nome"></td>
-                            <td v-text="p.quantidade"></td>
                             <td v-text="p.cor"></td>
+                            <td v-text="p.quantidade"></td>
                             <td v-text="p.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})" id="precos"></td>
                             <td v-text="(p.preco * p.quantidade).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})"></td>
                             <td class="abaDesconto">

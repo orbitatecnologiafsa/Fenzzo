@@ -45,6 +45,7 @@ new Vue({
               quantidade: parseInt(this.produtos[index].quantidade = prompt('Quantidade')),
               idCor: this.produtos[index].idCor,
               cor: this.produtos[index].cor,
+              gradeID: this.produtos[index].grade,
             });
             console.log(this.produtosSelecionados);
             this.calcularTotal();
@@ -87,14 +88,27 @@ new Vue({
             const idDesconto = 'descontos_' + index;
             const valorDesconto = document.getElementById(idDesconto).value;
             const precoInicial = this.produtosSelecionados[index].preco * this.produtosSelecionados[index].quantidade;
-            console.log(this.produtosSelecionados[index].quantidade);
+              console.log(this.produtosSelecionados[index].quantidade);
 
-            this.desconto = parseFloat(valorDesconto)/100;
-            console.log(this.desconto);
-            const valorFinal =  precoInicial * this.desconto;
-            console.log(valorFinal);
-            this.total = this.total - valorFinal;
-            document.getElementById(idDesconto).value = '';
+            
+            if (valorDesconto === '') {
+              this.desconto = 0;
+              this.produtosSelecionados[index].desconto = 0;
+              const valorFinal =  precoInicial;
+              this.produtosSelecionados[index].vlr_desconto = valorFinal;
+            } else {
+              this.desconto = parseFloat(valorDesconto)/100;
+              this.produtosSelecionados[index].desconto = parseFloat(valorDesconto);
+  
+                console.log(this.desconto);
+              const valorFinal =  precoInicial * this.desconto;
+              this.produtosSelecionados[index].vlr_desconto = valorFinal;
+                console.log(this.produtosSelecionados[index].vlr_desconto);
+                console.log(valorFinal);
+              this.total = this.total - valorFinal;
+              document.getElementById(idDesconto).value = '';
+                console.log(this.produtosSelecionados[index]);
+            }
           },
 
           pesquisarProduto(val){
