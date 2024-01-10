@@ -48,6 +48,11 @@ app.post('/vendas', (request, response) => {
 
       // Calcular desconto total
       itensVenda.forEach((item) => {
+        if (item.desconto == undefined) {
+          item.desconto = 0;
+          item.vlr_desconto = 0;
+        }
+
         descontoTotal += item.vlr_desconto;
         console.log(descontoTotal);
         totalProdutosSemDesconto += item.preco * item.quantidade;
@@ -76,6 +81,8 @@ app.post('/vendas', (request, response) => {
       // Inserir itens de venda associados à venda
       await Promise.all(
         itensVenda.map((item) => {
+          
+
           const vlrTotal = (item.quantidade * item.preco) - item.vlr_desconto;
 
           // Inserir dados na tabela de itens de venda

@@ -91,24 +91,22 @@ new Vue({
               console.log(this.produtosSelecionados[index].quantidade);
 
             
-            if (valorDesconto === '') {
-              this.desconto = 0;
-              this.produtosSelecionados[index].desconto = 0;
-              const valorFinal =  precoInicial;
-              this.produtosSelecionados[index].vlr_desconto = valorFinal;
-            } else {
-              this.desconto = parseFloat(valorDesconto)/100;
-              this.produtosSelecionados[index].desconto = parseFloat(valorDesconto);
-  
+            
+                this.desconto = parseFloat(valorDesconto) / 100;
+                this.produtosSelecionados[index].desconto = parseFloat(valorDesconto);
+              
                 console.log(this.desconto);
-              const valorFinal =  precoInicial * this.desconto;
-              this.produtosSelecionados[index].vlr_desconto = valorFinal;
+                const valorFinal = precoInicial * this.desconto;
+                this.produtosSelecionados[index].vlr_desconto = valorFinal;
                 console.log(this.produtosSelecionados[index].vlr_desconto);
                 console.log(valorFinal);
-              this.total = this.total - valorFinal;
-              document.getElementById(idDesconto).value = '';
+                this.total = this.total - valorFinal;
+                document.getElementById(idDesconto).value = '';
                 console.log(this.produtosSelecionados[index]);
-            }
+              
+              
+
+              
           },
 
           pesquisarProduto(val){

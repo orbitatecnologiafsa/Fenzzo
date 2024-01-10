@@ -62,7 +62,7 @@
                 <div>
                     <h1 class="titleProds">Lista de produtos</h1>
                     <table class="table">
-                        <thead>
+                        <thead class="cabeçalho">
                           <tr>
                             <th scope="col">Cod.Produto</th>
                             <th scope="col">Produto</th>
@@ -73,7 +73,7 @@
                             <th scope="col">Desconto</th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="dadosCabeçalho">
                           <tr v-for="(p, index) in produtosSelecionados" :key="p.id">
                             <th scope="row">{{ p.referencia }}</th>
                             <td v-text="p.nome"></td>
