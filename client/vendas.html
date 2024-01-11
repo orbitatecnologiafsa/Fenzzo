@@ -74,7 +74,7 @@
                           </tr>
                         </thead>
                         <tbody class="dadosCabeçalho">
-                          <tr v-for="(p, index) in produtosSelecionados" :key="p.id">
+                          <tr v-for="(p, index) in produtosSelecionados" :key="p.id" class="dadosTable">
                             <th scope="row">{{ p.referencia }}</th>
                             <td v-text="p.nome"></td>
                             <td v-text="p.cor"></td>

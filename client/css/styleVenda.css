@@ -463,7 +463,28 @@ hr{
     .abaDesconto{
         display: flex;
         align-items: center;
-        height: 4.31rem;
+        height: 5vh;
+    }
+    .descontoBtn{   
+        margin: 0 0.5rem 0 0.5rem;
+        border-radius: 10px;
+        background: rgb(160,125,100);
+        background: linear-gradient(171deg,rgba(184,104,48,1) 40%,  rgba(160,125,100,1) 100%);
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.8rem;
+        font-family: 'Poppins', sans-serif;
+        font-weight: bold;
+        color: aliceblue;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        text-align: center;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
     }
     .container{
         display: flex;
@@ -473,8 +494,8 @@ hr{
         background: linear-gradient(180deg, rgba(230,230,230,1) 0%, rgba(209,233,254,1) 100%);
         padding: 2rem;
         border-radius: 20px;
-        width: 84%;
-        margin-left: 10%;
+        width: 100%;
+        margin-left: 14%;
     }
     
     .inputVendedor {
@@ -503,9 +524,9 @@ hr{
     .form-control{
         width: 11rem;
     }
-    .desconto{
-        width: 4rem;
-        margin: 0 1rem 0 1rem;
+    .desconto {
+        width: 3rem;
+        height: 2rem;
     }
     .navbar {
         display: flex;
@@ -539,9 +560,6 @@ hr{
         justify-content: center;
     }
     .table{
-        display: flex;
-        justify-content: center;
-
         text-decoration: none;
         color: rgb(255, 255, 255);
         font-size: 0.65rem
@@ -558,5 +576,11 @@ hr{
         font-family: 'Poppins', sans-serif;
         color: aliceblue;
     
+    }
+    td{
+        font-size: 0.5rem;
+        font-family: 'Poppins', sans-serif;
+        font-weight: bold;
+        height: 2rem;
     }
 }
