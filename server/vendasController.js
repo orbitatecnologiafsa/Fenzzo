@@ -1,12 +1,12 @@
 // vendasController.js
 const firebird = require('node-firebird');
 
-function realizarVenda(request, response) {
+function realizarVenda(request, response, dbconfig) {
   const { codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, itensVenda, total } = request.body;
   const totall = parseFloat(total);
   console.log(itensVenda);
 
-  firebird.attach(dbConfig, async (err, db) => {
+  firebird.attach(dbconfig, async (err, db) => {
     if (err) {
       console.log("Erro ao conectar no banco de dados: ", err);
       response.status(500).send('Erro interno');
@@ -76,7 +76,7 @@ function realizarVenda(request, response) {
           const insertGradeQuery = new Promise((resolve, reject) => {
             db.query(
               'INSERT INTO PEDIDOS_ITENS_GRADE (IDX, CODIGO, REFERENCIA, EMPRESA, COR_ID, COR, TAMANHO_ID, APROVADO, GRADE_ID, QUANTIDADE, VALOR_UNIT) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-              [idVenda, idVenda, item.referencia, 1, item.idCor, item.cor, 26, 'N', item.gradeID, item.quantidade, item.preco],
+              [idVenda, idVenda, item.referencia, 1, item.idCor, item.cor, 26, 'N', 26, item.quantidade, item.preco],
               (err, result) => {
                 if (err) {
                   reject(err);
@@ -102,7 +102,7 @@ function realizarVenda(request, response) {
   });
 }
 
-function buscarProdutos(request, response) {
+function buscarProdutos(request, response, dbConfig) {
   firebird.attach(dbConfig, (err, db) => {
     if (err) {
       console.log("Erro ao conectar no banco de dados: ", err);
@@ -110,7 +110,7 @@ function buscarProdutos(request, response) {
       return;
     }
 
-    db.query('SELECT * FROM CAD_PRODUTOS INNER JOIN PCP_CORES ON (cad_produtos.codigo = pcp_cores.codigo) INNER JOIN CAD_PRODUTOS_GRADES ON (cad_produtos.codigo = cad_produtos_grades.codigo)', [], (err, result) => {
+    db.query('SELECT cad_produtos.codigo, cad_produtos.referencia, CAD_PRODUTOS.descricao, cad_produtos.prc_venda, cad_produtos_grades.grade_id, cad_produtos_grades.cor_id, cad_cores.nome FROM CAD_PRODUTOS INNER JOIN CAD_PRODUTOS_GRADES ON (cad_produtos.codigo = cad_produtos_grades.codigo) LEFT JOIN CAD_CORES ON (cad_produtos_grades.cor_id = CAD_CORES.codigo)', [], (err, result) => {
       if (err) {
         console.log('Erro ao buscar produtos: ', err);
         response.status(500).send('Erro interno do servidor');
@@ -123,12 +123,12 @@ function buscarProdutos(request, response) {
         nome: row.DESCRICAO,
         preco: row.PRC_VENDA,
         referencia: row.REFERENCIA,
+        grade: row.GRADE,
         cor: row.NOME,
-        idCor: row.ID_COR,
-        grade: row.GRADE_ID
-        
-      }));
+        idCor: row.COR_ID
 
+      }));
+      console.log(result);
       response.setHeader('Content-Type', 'application/json');
       response.json(produtos);
       db.detach();

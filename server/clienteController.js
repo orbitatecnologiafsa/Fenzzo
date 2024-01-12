@@ -1,6 +1,6 @@
 const firebird = require('node-firebird');
 
-function buscarCliente(request, response) {
+function buscarCliente(request, response, dbConfig) {
   firebird.attach(dbConfig, (err, db) =>{
     if (err) {
       console.log("Erro ao conectar no banco: ", err);
@@ -37,7 +37,7 @@ function buscarCliente(request, response) {
   })
 }
 
-function buscarVendedor(request, response) {
+function buscarVendedor(request, response, dbConfig) {
   firebird.attach(dbConfig, (err, db) =>{
     if (err) {
       console.log("Erro ao conectar no banco: ", err);

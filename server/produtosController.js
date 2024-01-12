@@ -1,7 +1,7 @@
 // produtosController.js
 const firebird = require('node-firebird');
 
-function buscarProdutos(request, response) {
+function buscarProdutos(request, response, dbConfig) {
     firebird.attach(dbConfig, (err, db) => {
     if (err) {
       console.log("Erro ao conectar no banco de dados: ", err);

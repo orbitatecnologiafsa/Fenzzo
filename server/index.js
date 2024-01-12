@@ -10,11 +10,11 @@ const app = express();
 const port = 3000;
 
 const dbConfig = {
-  host:  process.env.DB_HOST || '192.168.0.109',
-  port: process.env.DB_PORT || 3050,
-  database: process.env.DB_DATABASE || 'C:/Users/orbita/Pictures/indpcp.fdb',
-  user: process.env.DB_USER || 'SYSDBA',
-  password: process.env.DB_PASSWORD || 'masterkey',
+  host:  process.env.DB_HOST ,
+  port: process.env.DB_PORT ,
+  database: process.env.DB_DATABASE,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   lowercase_keys: false,
   role: null,
   pageSize: 4096,
@@ -34,16 +34,16 @@ app.get('/vendas', (req, res) => {
 });
 
 
-
-app.get('/produtos', vendasController.buscarProdutos);
-app.get('/clientes', clienteController.buscarCliente)
-app.get('/vendedores', clienteController.buscarVendedor)
-app.get('/prods', produtosController.buscarProdutos);
-
-
-
-
 app.post('/vendas', vendasController.realizarVenda);
+
+app.get('/produtos',(request, response) => vendasController.buscarProdutos(request, response, dbConfig));
+app.get('/clientes',(request, response) => clienteController.buscarCliente(request, response, dbConfig))
+app.get('/vendedores',(request, response) => clienteController.buscarVendedor(request, response, dbConfig))
+app.get('/prods',(request, response) => produtosController.buscarProdutos(request, response, dbConfig));
+
+
+
+
 
 app.listen(port, () => {
   console.log('Servidor OK na porta:' + port);
