@@ -1,0 +1,24 @@
+body{
+    background: rgb(160,125,100);
+    background: linear-gradient(171deg, rgba(160,125,100,1) 0%, rgba(184,104,48,1) 100%);
+
+  }
+  .navbar{
+    display: flex;
+    justify-content: center;
+  }
+  .tittle{
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-size: 4.5rem
+  }
+  main{
+    display: flex;
+    flex-direction: column;
+    margin: 0 5rem 0 5rem;
+    background: rgb(230,230,230);
+    background: linear-gradient(180deg, rgba(230,230,230,1) 0%, rgba(209,233,254,1) 100%);
+    padding: 5rem;
+    border-radius: 20px;
+  
+  }
