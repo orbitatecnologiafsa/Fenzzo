@@ -1,4 +1,4 @@
-const URL = 'http://localhost:3000';
+const URL = 'http://131.0.245.253:3000';
 new Vue({
     el: '#app',
     data: {

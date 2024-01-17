@@ -17,7 +17,7 @@ const dbConfig = {
   password: process.env.DB_PASSWORD,
   lowercase_keys: false,
   role: null,
-  pageSize: 4096,
+  pageSize: 4096
 };
 //BANCO CERTO 'C:/IndPCP/DB/indpcp.fdb'
 // 192.168.15.30
@@ -40,7 +40,7 @@ app.get('/produtos',(request, response) => vendasController.buscarProdutos(reque
 app.get('/clientes',(request, response) => clienteController.buscarCliente(request, response, dbConfig))
 app.get('/vendedores',(request, response) => clienteController.buscarVendedor(request, response, dbConfig))
 app.get('/prods',(request, response) => produtosController.buscarProdutos(request, response, dbConfig));
-
+app.get('/imagens',(request, response) => produtosController.buscarImagens(request, response, dbConfig));
 
 
 

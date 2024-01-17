@@ -13,7 +13,7 @@ body{
 }
 .main{
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   margin: 0 5rem 0 5rem;
   background: rgb(230,230,230);
   background: linear-gradient(180deg, rgba(230,230,230,1) 0%, rgba(209,233,254,1) 100%);
@@ -21,8 +21,12 @@ body{
   border-radius: 20px;
 
 }
-.listProd{
+#listProds{
   display: flex;
-  flex-direction: column;
-
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 3rem;
+  justify-content: center;
+  align-items: center;
+  
 }

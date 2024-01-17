@@ -128,7 +128,7 @@ function buscarProdutos(request, response, dbConfig) {
         idCor: row.COR_ID
 
       }));
-      console.log(result);
+      
       response.setHeader('Content-Type', 'application/json');
       response.json(produtos);
       db.detach();
