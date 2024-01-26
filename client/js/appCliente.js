@@ -3,6 +3,7 @@ new Vue({
     el: '#appCliente',
     data: {
         listaClientes: [],
+        search: ''
     },
     methods: {
         async getClientes() {
@@ -17,9 +18,22 @@ new Vue({
             this.listaClientes = data;
             console.log(this.listaClientes);
             
+        },
+        pesquisarClientes() {
+            console.log(this.search);
+            if (this.search.length === 0) {
+                this.getClientes();
+            } else {
+                this.listaClientes = this.listaClientes.filter(item => item.nome.toLowerCase().includes(this.search.toLowerCase()));
+            }
         }
     },
     mounted() {
         this.getClientes();
+    },
+    watch: {
+        search: function () {
+            this.pesquisarClientes();
+        }
     }
 })

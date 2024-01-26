@@ -37,18 +37,32 @@ new Vue({
           },
       
          adicionarProduto(index){
-            this.produtosSelecionados.push({
+          // Solicitar a quantidade
+          const quantidadeInput = prompt('Quantidade');
+
+          // Verificar se a quantidade é um número válido
+          const quantidade = parseInt(quantidadeInput);
+          if (isNaN(quantidade) || quantidade <= 0) {
+              // Se a quantidade não for válida, você pode exibir uma mensagem ou tomar outra ação
+              alert('Por favor, insira uma quantidade válida maior que zero.');
+              return; // Sai da função sem adicionar o produto
+          }
+
+          // Adicionar o produto à lista produtosSelecionados
+          this.produtosSelecionados.push({
               id: this.produtos[index].id,
               nome: this.produtos[index].nome,
               preco: this.produtos[index].preco,
               referencia: this.produtos[index].referencia,
-              quantidade: parseInt(this.produtos[index].quantidade = prompt('Quantidade')),
+              quantidade: quantidade,
               idCor: this.produtos[index].idCor,
               cor: this.produtos[index].cor,
               gradeID: this.produtos[index].grade,
-            });
-            console.log(this.produtosSelecionados);
-            this.calcularTotal();
+          });
+
+          console.log(this.produtosSelecionados);
+          this.calcularTotal();
+
           },
 
         async getClientes(){
@@ -90,19 +104,34 @@ new Vue({
             const precoInicial = this.produtosSelecionados[index].preco * this.produtosSelecionados[index].quantidade;
               console.log(this.produtosSelecionados[index].quantidade);
 
-            
-            
-                this.desconto = parseFloat(valorDesconto) / 100;
-                this.produtosSelecionados[index].desconto = parseFloat(valorDesconto);
+            if (valorDesconto === '') {
+              this.desconto = 0;
+              this.produtosSelecionados[index].desconto = 0;
               
-                console.log(this.desconto);
-                const valorFinal = precoInicial * this.desconto;
-                this.produtosSelecionados[index].vlr_desconto = valorFinal;
-                console.log(this.produtosSelecionados[index].vlr_desconto);
-                console.log(valorFinal);
-                this.total = this.total - valorFinal;
-                document.getElementById(idDesconto).value = '';
-                console.log(this.produtosSelecionados[index]);
+              console.log(this.desconto);
+              const valorFinal = precoInicial 
+              this.produtosSelecionados[index].vlr_desconto = valorFinal;
+              console.log(this.produtosSelecionados[index].vlr_desconto);
+              console.log(valorFinal);
+              this.total = valorFinal;
+              document.getElementById(idDesconto).value = '';
+              console.log(this.produtosSelecionados[index]);
+              
+            } else {
+              this.desconto = parseFloat(valorDesconto) / 100;
+              this.produtosSelecionados[index].desconto = parseFloat(valorDesconto);
+            
+              console.log(this.desconto);
+              const valorFinal = precoInicial * this.desconto;
+              this.produtosSelecionados[index].vlr_desconto = valorFinal;
+              console.log(this.produtosSelecionados[index].vlr_desconto);
+              console.log(valorFinal);
+              this.total = this.total - valorFinal;
+              document.getElementById(idDesconto).value = '';
+              console.log(this.produtosSelecionados[index]);
+              
+            }
+            
               
               
 

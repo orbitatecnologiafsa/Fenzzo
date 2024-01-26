@@ -4,26 +4,29 @@ const firebird = require('node-firebird');
 function realizarVenda(request, response, dbconfig) {
   const { codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, itensVenda, total } = request.body;
   const totall = parseFloat(total);
-  console.log(itensVenda);
-
+  console.log('Parou aqui' , codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, itensVenda, total);
+  
+try {
+  console.log("Oiiiiii");
   firebird.attach(dbconfig, async (err, db) => {
+  console.log("Oiii 2222");
     if (err) {
       console.log("Erro ao conectar no banco de dados: ", err);
       response.status(500).send('Erro interno');
       return;
     }
-
+    console.log("Conectado ao banco de dados");
     try {
       let descontoTotal = 0;
       let totalProdutosSemDesconto = 0;
-
+      console.log("Parou aqui 2222" , codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, itensVenda, total);
       // Calcular desconto total
       itensVenda.forEach((item) => {
         if (item.desconto == undefined) {
           item.desconto = 0;
           item.vlr_desconto = 0;
         }
-
+        console.log("Parou aqui 3333" , codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, itensVenda, total);
         descontoTotal += item.vlr_desconto;
         console.log(descontoTotal);
         totalProdutosSemDesconto += item.preco * item.quantidade;
@@ -37,13 +40,17 @@ function realizarVenda(request, response, dbconfig) {
           (err, result) => {
             if (err) {
               reject(err);
+              console.log('Erro ao inserir dados na tabela de vendas: ', err);
+              console.log([codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, 'VENDA', 'N', 'N', 'N', totall, descontoTotal, totalProdutosSemDesconto])
             } else {
               resolve(result);
+              console.log('Resultado da inserção na tabela de vendas: ', result);
+              console.log([codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, 'VENDA', 'N', 'N', 'N', totall, descontoTotal, totalProdutosSemDesconto])
+
             }
           }
         );
       });
-      console.log([codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, 'VENDA', 'N', 'N', 'N', totall, descontoTotal, totalProdutosSemDesconto])
       console.log('Resultado da inserção na tabela de vendas: ', result);
 
       const idVenda = result.CODIGO;
@@ -64,9 +71,9 @@ function realizarVenda(request, response, dbconfig) {
               (err, result) => {
                 if (err) {
                   reject(err);
-                  console.log([idVenda, item.referencia, item.nome, item.quantidade, item.preco, vlrTotal, 1, new Date(), codigoCliente, item.desconto, item.vlr_desconto])
+                  console.log("Deu ruim",[idVenda, item.referencia, item.nome, item.quantidade, item.preco, vlrTotal, 1, new Date(), codigoCliente, item.desconto, item.vlr_desconto])
                 } else {
-                  resolve(result);
+                  resolve("Sucesso" ,result);
                 }
               }
             );
@@ -76,12 +83,14 @@ function realizarVenda(request, response, dbconfig) {
           const insertGradeQuery = new Promise((resolve, reject) => {
             db.query(
               'INSERT INTO PEDIDOS_ITENS_GRADE (IDX, CODIGO, REFERENCIA, EMPRESA, COR_ID, COR, TAMANHO_ID, APROVADO, GRADE_ID, QUANTIDADE, VALOR_UNIT) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-              [idVenda, idVenda, item.referencia, 1, item.idCor, item.cor, 26, 'N', 26, item.quantidade, item.preco],
+              [idVenda, idVenda, item.referencia, 1, item.idCor, item.cor, 26, 'N', item.gradeID, item.quantidade, item.preco],
               (err, result) => {
                 if (err) {
                   reject(err);
+                  console.log("Deu ruim",[idVenda, idVenda, item.referencia, 1, item.idCor, item.cor, 26, 'N', 26, item.quantidade, item.preco])
                 } else {
                   resolve(result);
+                  console.log("Sucesso" ,result);
                 }
               }
             );
@@ -100,9 +109,13 @@ function realizarVenda(request, response, dbconfig) {
       db.detach();
     }
   });
+} catch (error) {
+  console.error('Erro ao conectar no banco de dados:', error);
+  response.status(500).send('Erro interno');
+}
 }
 
-function buscarProdutos(request, response, dbConfig) {
+function buscarProdutosVendas(request, response, dbConfig) {
   firebird.attach(dbConfig, (err, db) => {
     if (err) {
       console.log("Erro ao conectar no banco de dados: ", err);
@@ -123,7 +136,7 @@ function buscarProdutos(request, response, dbConfig) {
         nome: row.DESCRICAO,
         preco: row.PRC_VENDA,
         referencia: row.REFERENCIA,
-        grade: row.GRADE,
+        grade: row.GRADE_ID,
         cor: row.NOME,
         idCor: row.COR_ID
 
@@ -139,5 +152,5 @@ function buscarProdutos(request, response, dbConfig) {
 
 module.exports = {
   realizarVenda,
-  buscarProdutos,
+  buscarProdutosVendas,
 };

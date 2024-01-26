@@ -1,6 +1,7 @@
 body{
     background: rgb(160,125,100);
     background: linear-gradient(171deg, rgba(160,125,100,1) 0%, rgba(184,104,48,1) 100%);
+    
 }
 
 
@@ -153,6 +154,7 @@ hr{
     color: aliceblue;
 
 }
+
 .btnFinalizacao:disabled{
     opacity: 0.8;
 }
@@ -309,6 +311,7 @@ hr{
         border-radius: 20px;
         width: 100%;
         margin-left: 11%;
+
     }
     
     .inputVendedor {
@@ -365,6 +368,7 @@ hr{
         background: linear-gradient(171deg, rgba(160,125,100,1) 0%, rgba(184,104,48,1) 100%);
         display: flex;
         justify-content: center;
+        
     }
     
 }

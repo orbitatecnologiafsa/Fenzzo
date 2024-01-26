@@ -1,10 +1,13 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const vendasController = require('./vendasController');
-const produtosController = require('./produtosController');
-const clienteController = require('./clienteController');
+const vendasController = require('./controllers/vendasController');
+const produtosController = require('./controllers/produtosController');
+const clienteController = require('./controllers/clienteController');
 require('dotenv').config();
+const session = require('express-session');
+const bodyParser = require('body-parser');
+
 
 const app = express();
 const port = 3000;
@@ -17,30 +20,56 @@ const dbConfig = {
   password: process.env.DB_PASSWORD,
   lowercase_keys: false,
   role: null,
-  pageSize: 4096
+  pageSize: 4096,
+  blobAsBase64: false,
+  encoding: 'UTF-8',
+
 };
 //BANCO CERTO 'C:/IndPCP/DB/indpcp.fdb'
 // 192.168.15.30
+
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}))
 app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, '..','client')));
-app.use(express.urlencoded({ extended: true }));
-
-const pathToVendas = path.resolve(__dirname, '..', 'client', 'vendas.html');
-console.log("__dirname:", __dirname);
-console.log("pathToIndex:", pathToVendas);
-app.get('/vendas', (req, res) => {
-  res.sendFile(pathToVendas);
-});
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.post('/vendas', vendasController.realizarVenda);
-
-app.get('/produtos',(request, response) => vendasController.buscarProdutos(request, response, dbConfig));
+app.get('/produtos',(request, response) => vendasController.buscarProdutosVendas(request, response, dbConfig));
 app.get('/clientes',(request, response) => clienteController.buscarCliente(request, response, dbConfig))
 app.get('/vendedores',(request, response) => clienteController.buscarVendedor(request, response, dbConfig))
 app.get('/prods',(request, response) => produtosController.buscarProdutos(request, response, dbConfig));
 app.get('/imagens',(request, response) => produtosController.buscarImagens(request, response, dbConfig));
+
+
+var login = "admin";
+var senha = "admin";
+
+app.get('/', (req, res) => {
+  if (req.session.login) {
+    res.sendFile(path.join(__dirname, '..', 'client', 'Home.html'));
+  } else {
+    res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
+  }
+});
+
+app.post('/login', (req, res) => {
+  if (req.body.login == login && req.body.senha == senha) {
+    req.session.login = login;
+    res.sendFile(path.join(__dirname, '..', 'client', 'Home.html'));
+  } else {
+    res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
+  }
+});
+
+
+app.post('/vendas', (request, response) => vendasController.realizarVenda(request, response, dbConfig));
+
+
 
 
 

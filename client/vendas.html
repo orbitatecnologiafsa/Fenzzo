@@ -16,10 +16,10 @@
 <body>
     <div id="app">
         <nav class="navbar">
-            <h1><a href="./index.html" class="tittle">FENZZO</a></h1>
+            <h1><a href="./Home.html" class="tittle">FENZZO</a></h1>
         </nav>
         <section class="container">
-            <form @submit.prevent="salvarVenda" id="formVendas">
+            <form id="formVendas">
                 
                 <div class="inputVendedor" style="row-gap: 0;">
                     <div class="grid3">
@@ -83,7 +83,7 @@
                             <td v-text="(p.preco * p.quantidade).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})"></td>
                             <td class="abaDesconto">
                                 <input type="text" class="form-control desconto" :id="'descontos_' + index" v-mask="'##'">
-                                <input type="button" class="descontoBtn" @click="aplicarDesconto(index)" value="+">
+                                <input type="button" :disabled="desconto > 1" class="descontoBtn" @click="aplicarDesconto(index)" value="+">
                             </td>    
                           </tr>
                           

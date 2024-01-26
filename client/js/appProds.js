@@ -1,4 +1,5 @@
 const URL = 'http://131.0.245.253:3000';
+
 new Vue({
   el: '#appProds',
   data: {
@@ -20,21 +21,44 @@ new Vue({
       this.listaProdutos = data;
       console.log(this.listaProdutos);
     },
-    async getImagens(){
 
+    
+    async getImagens() {
       const config = {
           headers: {
-          'Content-Type': 'image/jpeg'
-        },
-        method:'GET',
+              'Content-Type': 'image/jpeg'
+          },
+          method: 'GET',
+      };
+  
+      try {
+          const response = await fetch(`${URL}/imagens`, config);
+          const dataArray = await response.json();
+  
+          dataArray.forEach((data, index) => {
+              const base64String = data.FOTO_PATH;
+  
+              // Verificar se a string é uma base64 válida
+              if (/^[A-Za-z0-9+/]*={0,2}$/.test(base64String)) {
+                  // Atualiza a propriedade imagens do produto com a string base64
+                  this.$set(this.listaProdutos, index, {
+                      ...this.listaProdutos[index],
+                      imagens: base64String
+                  });
+              } else {
+                  console.warn(`A string base64 não é válida: ${base64String}`);
+              }
+          });
+      } catch (error) {
+          console.error('Erro ao obter imagens:', error);
       }
-      
-      const response = await fetch(`${URL}/imagens`,config);
-      const data = await response.blob();
-      this.listaProdutos.imagens = data
-      console.log(this.listaProdutos);
-      
-    }
+  },
+  
+  
+  
+  
+  
+  
   },
   mounted() {
     this.getListaProdutos();

@@ -19,16 +19,16 @@
 <body>
     <div id="appProds">
         <nav class="navbar">
-            <h1><a href="./index.html" class="tittle">FENZO</a></h1>
+            <h1><a href="./Home.html" class="tittle">FENZZO</a></h1>
         </nav>
         <main>
             <div class="container-lg" id="listProds">
                 <div v-for="(p, index) in listaProdutos" :key="index" >
                     <div class="card" style="width: 18rem;">
-                        <img :src="p.imagens" class="card-img-top" alt="...">
+                        <img :src="'data:image/jpeg;base64,' + p.imagens" class="card-img-top" alt="...">
                         <div class="card-body">
                           <h4>{{p.nome}}</h4>  
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                          <p class="card-text">{{p.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}}</p>
                         </div>
                     </div>
                 </div>
