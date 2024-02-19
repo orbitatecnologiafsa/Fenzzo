@@ -35,10 +35,9 @@
                     </div>
                     <div class="grid1">
                         <label for="exampleDataList1" class="form-label">Nome do Cliente</label>
-                        <input class="form-control" ref="clienteNome" list="datalistOptions1" id="exampleDataList1" @input="selecionarCliente" placeholder="Type to search...">
-                        <datalist id="datalistOptions1" >
-                        <option v-for="cli in dadosClientes" :value="cli.nome"></option>
-                        </datalist>
+                        <input class="form-control" ref="clienteNome" list="datalistOptions1" id="exampleDataList1" placeholder="Type to search..." data-bs-toggle="modal" data-bs-target="#modal2">
+                        <!-- <option v-for="cli in dadosClientes" :value="cli.nome"></option> -->
+                        <!-- @input="selecionarCliente"  -->
                     </div>
                     <div class="grid4">
                         <label for="addressInput" class="form-label">Endereço</label>
@@ -56,6 +55,15 @@
                         <input ref="phone" type="text" class="form-control" id="telefoneInput" v-mask="'#####-####'">
                     </div>
                     <div class="grid7">
+                        <label for="inputGroupSelect01" class="form-label">Pagamento</label>
+                        <div class="input-group mb-3">
+                            
+                            <select class="form-select" id="inputGroupSelect01" >
+                              <option selected>Choose...</option >
+                              <option  v-for="(pgto, index) in pagamentos" :value="pgto.id" >{{ pgto.nome }}</option>
+                              
+                            </select>
+                          </div>
                     </div>
                 </div>
                 <hr>
@@ -82,7 +90,7 @@
                             <td v-text="p.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})" id="precos"></td>
                             <td v-text="(p.preco * p.quantidade).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})"></td>
                             <td class="abaDesconto">
-                                <input type="text" class="form-control desconto" :id="'descontos_' + index" v-mask="'##'">
+                                <input type="text" class="form-control desconto" :id="'descontos_' + index" v-mask="'##'"> %    
                                 <input type="button" :disabled="desconto > 1" class="descontoBtn" @click="aplicarDesconto(index)" value="+">
                             </td>    
                           </tr>
@@ -103,7 +111,7 @@
                 </div>
                 <hr>
                 <div class="botaoDiv">
-                    <button :disabled="produtosSelecionados.length == 0" type="submit" class="btnFinalizacao">
+                    <button :disabled="produtosSelecionados.length == 0" type="button" @click="salvarVenda" class="btnFinalizacao">
                         <span>Finalizar</span>
                     </button>
                 </div>
@@ -136,6 +144,32 @@
             </div>
              <!--Final do Modal -->
            
+
+            <!-- Modal 2-->
+            <div class="modal fade" id="modal2" tabindex="-1" aria-labelledby="modal2Label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modal2Label">Clientes</h1>
+                            <input type="text" placeholder="Pesquisar" class="form-control" style="margin-left: 20px;" v-model="searchCliente">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                            <div v-for="(cliente, index) in dadosClientes" :key="index" class="input-group mb-3">
+                                <button @click="selecionarCliente(cliente.nome)" class="modalConfig form-control">{{ cliente.nome + ' - ' + cliente.cnpj }}</button>
+                              </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
     </div>  <!--  Final do vue -->
  
     

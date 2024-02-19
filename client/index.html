@@ -13,27 +13,30 @@
     <script src="https://kit.fontawesome.com/b0f4659930.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <nav class="navbar">
-        <h1><a href="./index.html" class="tittle">FENZZO</a></h1>
-    </nav>
-    <div class="imagem">
+    <div id="appLogin">
+        <nav class="navbar">
+            <h1><a href="./index.html" class="tittle">FENZZO</a></h1>
+        </nav>
+        <div class="imagem">
+    
+            <img src="./imgs/Capturar.PNG" alt="">
+        </div>
+        <div class="container-lg login">
+            <h1>Login</h1>
+            <form action="/login"  method="POST" id="form">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="Login" name="login" v-model="login">
+                    <label for="floatingInput">Login</label>
+                  </div>
+                  <div class="form-floating">
+                    <input type="password" class="form-control" id="floatingPassword" placeholder="Senha" name="senha" v-model="senha">
+                    <label for="floatingPassword">Senha</label>
+                    <button type="submit" class="btn btn-warning" @click="login()">Acessar</button>
+    
+                </div>
+            </form>
+        </div>
 
-        <img src="./imgs/Capturar.PNG" alt="">
-    </div>
-    <div class="container-lg login">
-        <h1>Login</h1>
-        <form action="/login"  method="POST" id="form">
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" placeholder="Login" name="login">
-                <label for="floatingInput">Login</label>
-              </div>
-              <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Senha" name="senha">
-                <label for="floatingPassword">Senha</label>
-                <button type="submit" class="btn btn-warning">Acessar</button>
-
-            </div>
-        </form>
     </div>
 
 

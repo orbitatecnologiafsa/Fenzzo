@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/b0f4659930.js" crossorigin="anonymous"></script>
 </head>
 
 <!-- <ul class="listProd">
@@ -21,6 +22,10 @@
         <nav class="navbar">
             <h1><a href="./Home.html" class="tittle">FENZZO</a></h1>
         </nav>
+        <div class="inputBuscaCliente">
+            <input type="search" name="" id="search" class="form-control" placeholder="Pesquisar" v-model="search" >
+            <button type="button" class="btn btn-light" id="btnSearch" v-on:click="pesquisarProdutos()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
         <main>
             <div class="container-lg" id="listProds">
                 <div v-for="(p, index) in listaProdutos" :key="index" >

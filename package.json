@@ -22,6 +22,9 @@
     "mysql2": "^3.6.5",
     "node-firebird": "^1.1.8",
     "nodemon": "^3.0.1",
-    "vue-bootstrap-typeahead": "^0.2.6"
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "vue-bootstrap-typeahead": "^0.2.6",
+    "vue-router": "^4.2.5"
   }
 }

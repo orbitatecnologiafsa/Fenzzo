@@ -5,6 +5,7 @@ new Vue({
   data: {
     listaProdutos: [],
     listaImagens: [],
+    search: ''
   },
   methods: {
     async getListaProdutos(){
@@ -54,6 +55,15 @@ new Vue({
       }
   },
   
+  pesquisarProdutos(){
+    console.log(this.search);
+    if (this.search.length === 0) {
+      this.getListaProdutos();
+      this.getImagens();
+    } else {
+        this.listaProdutos = this.listaProdutos.filter(item => item.nome.toLowerCase().includes(this.search.toLowerCase()));
+    }
+  }
   
   
   
@@ -65,5 +75,10 @@ new Vue({
     this.getImagens();
 
   },
+  watch: {
+    search: function () {
+        this.pesquisarProdutos();
+    }
+}
 
 })

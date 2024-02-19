@@ -2,9 +2,9 @@
 const firebird = require('node-firebird');
 
 function realizarVenda(request, response, dbconfig) {
-  const { codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, itensVenda, total } = request.body;
+  const { codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, itensVenda, total, formaPagamento } = request.body;
   const totall = parseFloat(total);
-  console.log('Parou aqui' , codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, itensVenda, total);
+  console.log('Parou aqui' , codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, itensVenda, total, formaPagamento);
   
 try {
   console.log("Oiiiiii");
@@ -35,8 +35,8 @@ try {
       // Inserir dados na tabela de vendas
       const result = await new Promise((resolve, reject) => {
         db.query(
-          'INSERT INTO PEDIDOS (CLIENTE, VENDEDOR, QTDE_PRODUTOS, QTDE_TOTAL, TIPO, APROVADO, PRODUZINDO, SELECIONADO, VLR_TOTAL, VLR_DESCONTO, VLR_PRODUTOS) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING CODIGO',
-          [codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, 'VENDA', 'N', 'N', 'N', totall, descontoTotal, totalProdutosSemDesconto],
+          'INSERT INTO PEDIDOS (CLIENTE, VENDEDOR, QTDE_PRODUTOS, QTDE_TOTAL, TIPO, APROVADO, PRODUZINDO, SELECIONADO, VLR_TOTAL, VLR_DESCONTO, VLR_PRODUTOS, FORMAPAGTO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING CODIGO',
+          [codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, 'VENDA', 'N', 'N', 'N', totall, descontoTotal, totalProdutosSemDesconto, formaPagamento],
           (err, result) => {
             if (err) {
               reject(err);
@@ -150,7 +150,38 @@ function buscarProdutosVendas(request, response, dbConfig) {
 
 }
 
+function buscarPagamentos(request, response, dbConfig) {
+  firebird.attach(dbConfig, (err, db) => {
+    if (err) {
+      console.log("Erro ao conectar no banco de dados: ", err);
+      response.status(500).send('Erro interno');
+      return;
+    }
+
+
+    db.query('SELECT * FROM CAD_FORMAPAGTO', [], (err, result) => {
+      if (err) {
+        console.log('Erro ao buscar pagamentos: ', err);
+        response.status(500).send('Erro interno do servidor');
+        db.detach();
+        return;
+      }
+
+      const pagamentos = result.map(row => ({
+        id: row.CODIGO,
+        nome: row.NOME
+      }))
+
+      response.setHeader('Content-Type', 'application/json');
+      response.json(pagamentos);
+      db.detach();
+    })
+  })
+  
+}
+
 module.exports = {
   realizarVenda,
   buscarProdutosVendas,
+  buscarPagamentos,
 };

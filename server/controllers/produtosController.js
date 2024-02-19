@@ -13,7 +13,7 @@ function buscarImagens(request, response, dbConfig) {
                 throw err;
             }
 
-            transaction.query('SELECT FOTO_PATH FROM CAD_PRODUTOS_FOTOS', (err, result) => {
+            transaction.query('SELECT FIRST 8 FOTO_PATH FROM CAD_PRODUTOS_FOTOS', (err, result) => {
                 if (err) {
                     transaction.rollback();
                     return;
@@ -87,7 +87,7 @@ function buscarProdutos(request, response, dbConfig) {
       return;
     }
 
-    db.query("SELECT CAD_PRODUTOS.CODIGO, DESCRICAO, PRC_VENDA, FOTO_PATH FROM CAD_PRODUTOS INNER JOIN CAD_PRODUTOS_FOTOS ON (CAD_PRODUTOS.CODIGO = CAD_PRODUTOS_FOTOS.CODIGO)", [], (err, result) => {
+    db.query("SELECT FIRST 8 CAD_PRODUTOS.CODIGO, DESCRICAO, PRC_VENDA, FOTO_PATH FROM CAD_PRODUTOS INNER JOIN CAD_PRODUTOS_FOTOS ON (CAD_PRODUTOS.CODIGO = CAD_PRODUTOS_FOTOS.CODIGO)", [], (err, result) => {
       if (err) {
         console.log('Erro ao buscar produtos: ', err);
         response.status(500).send('Erro interno do servidor');

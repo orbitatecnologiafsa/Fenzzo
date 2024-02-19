@@ -6,14 +6,15 @@ new Vue({
       total: 0,
       desconto: 0,
       search: '',
+      searchCliente: '',
       produtosSelecionados: [],
       dadosClientes: [],
+      nomeCliente: '',
       vendedores: [],
+      pagamentos: [],
     },
     methods: {
-        console(){
-          console.log(this.dadosClientes);
-        },
+        
         async getProdutos(){
 
             const config = {
@@ -61,6 +62,7 @@ new Vue({
           });
 
           console.log(this.produtosSelecionados);
+          console.log(this.pagamentos);
           this.calcularTotal();
 
           },
@@ -142,14 +144,15 @@ new Vue({
             this.search = val;
             console.log(this.search);
             console.log(val);
-            if (this.search.length === 0) {
+            if (this.search.length === 0 ) {
               this.getProdutos();
             } else {
               this.produtos = this.produtos.filter(item => item.nome.toLowerCase().includes(this.search.toLowerCase()));
             }
           },
           async salvarVenda(){
-            console.log(this.produtosSelecionados);
+            const formaPag = document.getElementById('inputGroupSelect01').value;
+            console.log(formaPag);
             const quantidadeTotaldeProdutos = this.produtosSelecionados.reduce((total, item) => total + item.quantidade, 0);
             const obj = {
                 codigoCliente: this.dadosClientes.find(cli => cli.nome === this.$refs.clienteNome.value).id,
@@ -159,6 +162,7 @@ new Vue({
                 qtdeUnitaria: this.produtosSelecionados.length,
                 itensVenda: this.produtosSelecionados,
                 total: this.total,
+                formaPagamento: parseInt(formaPag),
             }
             const config = {
                 headers: {
@@ -172,30 +176,74 @@ new Vue({
             const data = await response.json();
             return data
           },
-          selecionarCliente() {
-            const clienteSelecionado = this.dadosClientes.find(cli => cli.nome === this.$refs.clienteNome.value);
-      
+          selecionarCliente(nomeCliente) {
+            const clienteSelecionado = this.dadosClientes.find(cli => cli.nome === nomeCliente);
+          
             if (clienteSelecionado) {
+              // Definir o valor do campo de nome do cliente
+              this.$refs.clienteNome.value = nomeCliente;
+          
               // Preencher os outros campos com os dados do cliente
               this.$refs.cnpj.value = clienteSelecionado.cnpj;
               this.$refs.address.value = clienteSelecionado.cep + " - " + clienteSelecionado.endereco + ", " + clienteSelecionado.numero + ", " + clienteSelecionado.bairro;
               this.$refs.city.value = clienteSelecionado.cidade + " - " + clienteSelecionado.uf;
               this.$refs.phone.value = clienteSelecionado.telefone;
-              
             } else {
-              this.$refs.cnpj.value = '';
-              this.$refs.address.value = '';
-              this.$refs.city.value = '';
-              this.$refs.phone.value = '';
+              // Limpar os outros campos se o cliente não for encontrado
+              this.limparCampos();
             }
-            }
+          
+            // Fechar o modal após selecionar um cliente
+            
           },
+          limparCampos() {
+            this.$refs.cnpj.value = '';
+            this.$refs.address.value = '';
+            this.$refs.city.value = '';
+            this.$refs.phone.value = '';
+          },
+
+            pesquisarCliente(val){
+              this.searchCliente = val;
+              console.log(this.search);
+              console.log(val);
+              if (this.searchCliente.length === 0 ) {
+                this.getClientes();
+              } else {
+                this.dadosClientes = this.dadosClientes.filter(cliente => cliente.nome.toLowerCase().includes(this.searchCliente.toLowerCase()));
+              }
+            },
+
+          async getPagamentos() {
+            const config = {
+              headers: {
+                'Content-Type': 'Application/json'
+              },
+              method:'GET',
+            }
+
+            const response = await fetch(`${URL}/pagamentos`,config);
+            const data = await response.json();
+            this.pagamentos = data;
+            console.log(this.pagamentos);
+          },
+          
+
+          },
+
+          
       
     
     mounted(){
         this.getProdutos();
+        this.getPagamentos();
         this.getClientes();
         this.getVendedor();
+        this.$refs.clienteNome.addEventListener('input', () => {
+          if (!this.$refs.clienteNome.value.trim()) {
+            this.limparCampos();
+          }});
+        
         
     },
     watch: {
@@ -205,7 +253,9 @@ new Vue({
         }, 
         deep: true // Este é o ponto crucial para garantir a detecção de mudanças profundas
       },
-      search: 'pesquisarProduto'
+      search: 'pesquisarProduto',
+      searchCliente: 'pesquisarCliente'
+
     }
 
 });

@@ -45,6 +45,7 @@ body{
 .form-control{
     width: 15rem;
 }
+
 .desconto{
     width: 4rem;
     margin: 0 1rem 0 1rem;
@@ -281,6 +282,7 @@ hr{
     padding: unset;
     font-family: 'Poppins', sans-serif;
     color: aliceblue;
+    margin: 0 0 0 0.5rem;
 }
 
 .selectUF{
@@ -291,6 +293,7 @@ hr{
 .abaDesconto{
     display: flex;
     align-items: center;
+    font-size: 1.3rem;
 }
 
 
@@ -326,6 +329,7 @@ hr{
         .grid4 { grid-area: 2 / 2 / 3 / 3; }
         .grid5 { grid-area: 3 / 1 / 4 / 2; }
         .grid6 { grid-area: 3 / 2 / 4 / 3; }
+        .grid7 { grid-area: 3 / 3 / 4 / 4; }
     
     #addressInput{
         width: 15rem;
@@ -379,8 +383,8 @@ hr{
 
     .abaDesconto{
         display: flex;
-        align-items: center;
-        height: 4.31rem;
+        align-items: center;    
+        font-size: 1rem;
     }
     .container{
         display: flex;
@@ -388,16 +392,18 @@ hr{
         max-width: fit-content;
         background: rgb(230,230,230);
         background: linear-gradient(180deg, rgba(230,230,230,1) 0%, rgba(209,233,254,1) 100%);
-        padding: 2rem;
+        padding: 4rem;
         border-radius: 20px;
         width: 100%;
-        margin-left: 11%;
+        margin-left: 10%;
     }
     
     .inputVendedor {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 0fr);
         grid-template-rows: repeat(3, 1fr);
+        justify-content: center;
+
         }
         
         .grid1 { grid-area: 1 / 1 / 2 / 2; }
@@ -406,22 +412,23 @@ hr{
         .grid4 { grid-area: 2 / 2 / 3 / 3; }
         .grid5 { grid-area: 3 / 1 / 4 / 2; }
         .grid6 { grid-area: 3 / 2 / 4 / 3; }
+        .grid7 { grid-area: 3 / 3 / 4 / 4; }
     
     #addressInput{
-        width: 15rem;
+        width: 11rem;
     }
     
     .form-label{
-        font-size: 1.2rem;
+        font-size: 1rem;
         font-family: 'Poppins', sans-serif;
         font-weight: bold;
     }
     .form-control{
-        width: 15rem;
+        width: 11rem;
     }
     .desconto{
-        width: 4rem;
-        margin: 0 1rem 0 1rem;
+        width: 3rem;
+        height: 1.8rem;
     }
     .navbar {
         display: flex;
@@ -448,6 +455,26 @@ hr{
         background: linear-gradient(171deg, rgba(160,125,100,1) 0%, rgba(184,104,48,1) 100%);
         display: flex;
         justify-content: center;
+    }
+
+
+    /* .cabeçalho th:nth-child(3),
+    .dadosCabeçalho td:nth-child(3),
+    .cabeçalho th:nth-child(7),
+    .dadosCabeçalho td:nth-child(7) {
+      display: none;
+    } */
+
+    .table{
+        width: 90%;
+        display:table-caption;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .cabeçalho th,
+    .dadosCabeçalho td {
+      text-align: center;
     }
     
 }
@@ -515,6 +542,7 @@ hr{
         .grid4 { grid-area: 2 / 2 / 3 / 3; }
         .grid5 { grid-area: 3 / 1 / 4 / 2; }
         .grid6 { grid-area: 3 / 2 / 4 / 3; }
+        .grid7 { grid-area: 3 / 3 / 4 / 4; }
     
     #addressInput{
         width: 11rem;

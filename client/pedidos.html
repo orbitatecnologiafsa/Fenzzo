@@ -9,20 +9,93 @@
     <script src="https://kit.fontawesome.com/b0f4659930.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <nav class="navbar">
-        <h1><a href="./index.html" class="tittle">FENZZO</a></h1>
-    </nav>
-    <div class="list-group">
-        <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
-          The current button
-        </button>
-        <button type="button" class="list-group-item list-group-item-action">A second button item</button>
-        <button type="button" class="list-group-item list-group-item-action">A third button item</button>
-        <button type="button" class="list-group-item list-group-item-action">A fourth button item</button>
-        <button type="button" class="list-group-item list-group-item-action" disabled>A disabled button item</button>
-      </div>
+    <div id="appPedidos">
+        <nav class="navbar">
+            <h1><a href="./index.html" class="tittle">FENZZO</a></h1>
+        </nav>
+        
+        <div class="container-lg" id="listPedidos">
+            <div v-for="(pedido, index) in listaPedidos" :key="index">
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#flush-collapseOne' + index" aria-expanded="false" :aria-controls="'flush-collapseOne' + index">
+                            Pedidos Cliente: {{pedido.cliente}} / Codigo: {{pedido.codigo}}
+                        </button>
+                      </h2>
+                      <div :id="'flush-collapseOne' + index" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <strong>Total de Produtos: {{pedido.totalProdutos}}   Valor Parcial: {{pedido.valorParcial.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}}</strong>
+                            <br>
+                            <Strong>Desconto: {{pedido.valorDesconto.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}}    Total: {{pedido.total.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}} </Strong>
+                            <br>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#exampleModal' + index" v-on:click="buscarItens(index)">
+                            Alterar Produto</button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                
+                  <div class="modal fade" :id="'exampleModal' + index" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Alterar Produtos</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="formGrid">
+                                <div class="form-floating mb-3 grid1">
+                                    <input type="text" class="form-control" id="floatingInput1" v-bind:ref="'cliente' + index">
+                                    <label for="floatingInput1">Cliente</label>
+                                </div>
+                                <div class="form-floating mb-3 grid2">
+                                    <input type="text" class="form-control" id="floatingInput1" v-bind:ref="'cliente' + index">
+                                    <label for="floatingInput1">Vendedor</label>
+                                </div>
+                                <div class="grid3">
+                                    <table class="table table-hover">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">Codigo</th>
+                                            <th scope="col">Nome</th>
+                                            <th scope="col">Valor</th>
+                                            <th scope="col">Qtde.</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr v-for="(item, index) in listaPedidosItens" :key="item.id" class="tableRemove">
+                                            <th scope="row">{{ item.id }}</th>
+                                            <td >{{ item.produto }}</td>
+                                            <td>{{ item.valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) }}</td>
+                                            <td>{{ item.qtde }}</td>
+                                            <td><button type="button" class="btn btn-danger" v-on:click="deletePedidos(index)">X</button></td>
+                                          </tr>
+                                          
+                                        </tbody>
+                                      </table>
+                                </div>
+    
+                            </div>
+                            
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" v-on:click="editPedidos(index)">Save changes</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+            </div>
+    
+        </div>
 
 
+
+
+<!-- Modal -->
+    </div>
 
 
 
@@ -36,6 +109,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="./js/vuemask.js"></script>
+    <script src="./js/appPedidos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

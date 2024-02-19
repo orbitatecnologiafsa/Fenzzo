@@ -1,14 +1,21 @@
 const firebird = require('node-firebird');
 
 function buscarCliente(request, response, dbConfig) {
+  if (!request.session.isAuthenticated) {
+    return response.status(401).send('Usuário não autenticado');
+  }
+
+  const vendedorId = request.session.vendedorId;
+
   firebird.attach(dbConfig, (err, db) =>{
     if (err) {
       console.log("Erro ao conectar no banco: ", err);
       response.status(500).send('Erro interno');
       return
     }
-
-    db.query("SELECT * FROM CAD_CLIENTES WHERE TIPO = 'CLIENTE'", [], (err, result) =>{
+  
+    db.query("SELECT * FROM CAD_CLIENTES WHERE TIPO = 'CLIENTE' AND VENDEDOR = ?", [vendedorId], (err, result) =>{
+    
       if (err) {
         console.log('Erro ao buscar a tabela: ', err);
         response.status(500).send('Erro interno do servidor');
