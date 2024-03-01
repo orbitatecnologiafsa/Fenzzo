@@ -47,7 +47,7 @@ app.use((request, response, next) => {
   console.log(`Requisição ${request.method} em ${request.url}`);
   next();
 });
-
+var loginID = [];
 // Middleware de autenticação
 function isAuthenticated(req, res, next) {
   if (req.session.isAuthenticated) {
@@ -59,19 +59,23 @@ function isAuthenticated(req, res, next) {
 
 // GET
 app.get('/produtos', (request, response) => vendasController.buscarProdutosVendas(request, response, dbConfig));
+// app.get('/exibir', (request, response) => vendasController.buscarProdutosExibir(request, response, dbConfig));
 app.get('/pagamentos', (request, response) => vendasController.buscarPagamentos(request, response, dbConfig));
-app.get('/clientes', (request, response) => clienteController.buscarCliente(request, response, dbConfig))
+app.get('/clientes', (request, response) => clienteController.buscarCliente(request, response, dbConfig, loginID));
 app.get('/vendedores', (request, response) => clienteController.buscarVendedor(request, response, dbConfig))
 app.get('/prods', (request, response) => produtosController.buscarProdutos(request, response, dbConfig));
 app.get('/imagens', (request, response) => produtosController.buscarImagens(request, response, dbConfig));
-app.get('/pedidos', (request, response) => pedidosController.buscarPedidos(request, response, dbConfig));
+app.get('/pedidos', (request, response) => pedidosController.buscarPedidos(request, response, dbConfig, loginID));
 app.get('/pedidosItens/:id', (request, response) => pedidosController.buscarItensPedido(request, response, dbConfig));
+app.get('/cores/:id', (request, response) => vendasController.buscarCoresDisponiveis(request, response, dbConfig));
 // POST
 app.post('/vendas', (request, response) => vendasController.realizarVenda(request, response, dbConfig));
 app.post('/login', (request, response) => {
   loginController.realizarLogin(request, response, dbConfig, (result) => {
       if (result.success) {
           response.redirect('/home.html');
+          loginID.push(result.vendedorId);
+          
       } else {
           response.status(401).redirect('/index.html');
           response.end();
@@ -79,9 +83,9 @@ app.post('/login', (request, response) => {
   });
 });
 // PUT
-app.put('/pedidos/:id',  (request, response) => pedidosController.editarPedidos(request, response, dbConfig));
+app.put('/pedidos/:id',(request, response) => pedidosController.editarPedidos(request, response, dbConfig));
 // DELETE
-app.delete('/pedidos/:id',  (request, response) => pedidosController.excluirItensPedidos(request, response, dbConfig));
+app.delete('/pedidos/:id',(request, response) => pedidosController.excluirItensPedidos(request, response, dbConfig));
 
 
 // var login = "admin";

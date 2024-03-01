@@ -15,7 +15,7 @@ function realizarLogin(request, response, dbConfig, callback) {
 
     const sql = 'SELECT COD_VENDEDOR FROM USUARIOS WHERE USERNAME = ? AND SENHA = ?';
 
-    db.query(sql, [login, senha], (err, result) => {
+    db.query(sql, [login.toUpperCase(), senha], (err, result) => {
       if (err) {
         console.log('Erro ao buscar a tabela: ', err);
         callback({ success: false, message: 'Erro interno do servidor' });
@@ -30,6 +30,7 @@ function realizarLogin(request, response, dbConfig, callback) {
         request.session.vendedorId = vendedorId;
         request.session.isAuthenticated = true; // Indica que o usuário está autenticado
         callback({ success: true, vendedorId });
+        return vendedorId;
         
       } else {
         callback({ success: false, message: 'Credenciais inválidas' });

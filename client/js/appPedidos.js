@@ -74,10 +74,7 @@ new Vue({
           },
         async buscarItens(index) {
             console.log(this.listaPedidos[index].codigo);
-            const obj = {
-                id: this.listaPedidos[index].codigo
 
-            }
             const config = {
                 headers: {
                     'Content-Type': 'Application/json'

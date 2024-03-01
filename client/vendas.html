@@ -76,7 +76,7 @@
                             <th scope="col">Produto</th>
                             <th scope="col">Cor</th>
                             <th scope="col">Quantidade</th>
-                            <th scope="col">Preço Unit.</th>
+                            <th scope="col">Preço U.</th>
                             <th scope="col">Total</th>
                             <th scope="col">Desconto</th>
                           </tr>
@@ -128,12 +128,15 @@
                         </div>
                         <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
                             
-                            <div v-for="(produto, index) in produtos" class="input-group mb-3">
-                                <input :value="produto.nome + ' - ' + produto.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) + ' - ' + produto.cor" 
+                            <div v-for="(produto, index) in produtos" class="input-group mb-3" :key="index">
+                                <img src="./imgs/bolsaDefault.png" alt="..." class="prodImageModal">
+                                <input :value="produto.nome + ' - ' + produto.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})" 
                                 type="button" 
                                 class="modalConfig form-control" 
                                 aria-label="Text input with checkbox"
-                                @click="adicionarProduto(index)">
+                                @click="selecionarProduto(index)"
+                                
+                                data-bs-toggle="modal" data-bs-target="#modal3">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -143,7 +146,51 @@
                 </div>
             </div>
              <!--Final do Modal -->
-           
+             <div class="modal fade" id="modal3" tabindex="-1" aria-labelledby="modal3Label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modal3Label">Cores</h1>
+                            <input type="text" placeholder="Pesquisar" class="form-control" style="margin-left: 20px;" v-model="searchCor">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                            <div v-for="(prodCor, corIndex) in cores" :key="corIndex" class="input-group mb-3">
+                                <input :value="prodCor.cor" 
+                                       type="button" 
+                                       class="modalConfig form-control" 
+                                       aria-label="Text input with checkbox"  
+                                       @click="armazenarCorTemporariamente(corIndex)"
+                                       data-bs-toggle="modal" data-bs-target="#modal4">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modal4" tabindex="-1" aria-labelledby="modal4Label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modal4Label">Quantidade</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                            <div class="input-group mb-3">
+                                <input type="number" v-model="quantidadeProduto" class="form-control" aria-label="Text input with checkbox">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="adicionarCor()">Adicionar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             
 
             <!-- Modal 2-->
             <div class="modal fade" id="modal2" tabindex="-1" aria-labelledby="modal2Label" aria-hidden="true">
@@ -165,6 +212,8 @@
                     </div>
                 </div>
             </div>
+            
+            
 
 
 

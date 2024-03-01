@@ -7,9 +7,9 @@ function realizarVenda(request, response, dbconfig) {
   console.log('Parou aqui' , codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, itensVenda, total, formaPagamento);
   
 try {
-  console.log("Oiiiiii");
+  
   firebird.attach(dbconfig, async (err, db) => {
-  console.log("Oiii 2222");
+  
     if (err) {
       console.log("Erro ao conectar no banco de dados: ", err);
       response.status(500).send('Erro interno');
@@ -19,14 +19,14 @@ try {
     try {
       let descontoTotal = 0;
       let totalProdutosSemDesconto = 0;
-      console.log("Parou aqui 2222" , codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, itensVenda, total);
+      
       // Calcular desconto total
       itensVenda.forEach((item) => {
         if (item.desconto == undefined) {
           item.desconto = 0;
           item.vlr_desconto = 0;
         }
-        console.log("Parou aqui 3333" , codigoCliente, vendedor, qtdeUnitaria, qtde_produtos, itensVenda, total);
+        
         descontoTotal += item.vlr_desconto;
         console.log(descontoTotal);
         totalProdutosSemDesconto += item.preco * item.quantidade;
@@ -131,23 +131,73 @@ function buscarProdutosVendas(request, response, dbConfig) {
         return;
       }
 
-      const produtos = result.map(row => ({
-        id: row.CODIGO,
-        nome: row.DESCRICAO,
-        preco: row.PRC_VENDA,
-        referencia: row.REFERENCIA,
-        grade: row.GRADE_ID,
-        cor: row.NOME,
-        idCor: row.COR_ID
+      const produtos = {};
 
-      }));
-      
+      result.forEach(row => {
+        const id = row.CODIGO;
+
+        if (!produtos[id]) {
+          produtos[id] = {
+            id: id,
+            nome: row.DESCRICAO,
+            preco: row.PRC_VENDA,
+            referencia: row.REFERENCIA,
+            cores: [],
+            grades: []
+          };
+        }
+
+        // Adiciona a cor atual ao array de cores do produto
+        if (row.COR_ID && row.NOME) {
+          produtos[id].cores.push({
+            idCor: row.COR_ID,
+            cor: row.NOME
+          });
+        }
+
+        // Adiciona a grade atual ao array de grades do produto
+        if (row.GRADE_ID) {
+          produtos[id].grades.push(row.GRADE_ID);
+        }
+      });
+
+      // Converte o objeto em um array
+      const produtosArray = Object.values(produtos);
+
       response.setHeader('Content-Type', 'application/json');
-      response.json(produtos);
+      response.json(produtosArray);
       db.detach();
     });
   });
+}
 
+function buscarCoresDisponiveis(request, response, dbConfig) {
+  console.log(request.params.id)
+  firebird.attach(dbConfig, (err, db) => {
+    if (err) {
+      console.log("Erro ao conectar no banco de dados: ", err);
+      response.status(500).send('Erro interno');
+      return;
+    }
+  db.query('SELECT * FROM CAD_PRODUTOS_GRADES WHERE REFERENCIA = ?', [request.params.id], (err, result) => {
+    if (err) {
+      console.log('Erro ao buscar cores: ', err);
+      response.status(500).send('Erro interno do servidor');
+      db.detach();
+      return;
+    }
+
+    const cores = result.map(row => ({
+      corId: row.COR_ID,
+      cor: row.COR,
+      gradeID : row.GRADE_ID
+    }))
+
+    response.setHeader('Content-Type', 'application/json');
+    response.json(cores);
+    db.detach();
+  })  
+})
 }
 
 function buscarPagamentos(request, response, dbConfig) {
@@ -184,4 +234,5 @@ module.exports = {
   realizarVenda,
   buscarProdutosVendas,
   buscarPagamentos,
+  buscarCoresDisponiveis,
 };

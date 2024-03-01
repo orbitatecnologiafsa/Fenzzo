@@ -2,8 +2,8 @@
 const firebird = require('node-firebird');
 // PEDIDOS_ITENS
 
-function buscarPedidos(request, response, dbConfig) {
-    const vendedorId = request.session.vendedorId;
+function buscarPedidos(request, response, dbConfig, vendedorID) {
+    const vendedorId = vendedorID;
     firebird.attach(dbConfig, (err, db) => {
         if (err) {
             console.log("Erro ao conectar no banco: ", err);

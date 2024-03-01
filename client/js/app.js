@@ -3,15 +3,19 @@ new Vue({
     el: '#app',
     data: {
       produtos: [],
+      produtosExibir: [],
       total: 0,
       desconto: 0,
       search: '',
       searchCliente: '',
+      searchCor: '',
       produtosSelecionados: [],
       dadosClientes: [],
       nomeCliente: '',
       vendedores: [],
       pagamentos: [],
+      cores: [],
+      quantidadeProduto: 1,
     },
     methods: {
         
@@ -28,7 +32,7 @@ new Vue({
             const data = await response.json();
             this.produtos = data;
             console.log(this.produtos);
-
+            console.log(this.produtos[0].cores);
           },
           calcularTotal(){
             this.total = 0;
@@ -36,70 +40,118 @@ new Vue({
                 this.total += produto.preco * parseFloat(produto.quantidade);
             });
           },
-      
-         adicionarProduto(index){
-          // Solicitar a quantidade
-          const quantidadeInput = prompt('Quantidade');
-
-          // Verificar se a quantidade é um número válido
-          const quantidade = parseInt(quantidadeInput);
-          if (isNaN(quantidade) || quantidade <= 0) {
-              // Se a quantidade não for válida, você pode exibir uma mensagem ou tomar outra ação
-              alert('Por favor, insira uma quantidade válida maior que zero.');
-              return; // Sai da função sem adicionar o produto
-          }
-
-          // Adicionar o produto à lista produtosSelecionados
-          this.produtosSelecionados.push({
-              id: this.produtos[index].id,
-              nome: this.produtos[index].nome,
-              preco: this.produtos[index].preco,
-              referencia: this.produtos[index].referencia,
-              quantidade: quantidade,
-              idCor: this.produtos[index].idCor,
-              cor: this.produtos[index].cor,
-              gradeID: this.produtos[index].grade,
-          });
-
-          console.log(this.produtosSelecionados);
-          console.log(this.pagamentos);
-          this.calcularTotal();
-
+          
+          selecionarProduto(index) {
+            // Chame a função para obter as cores disponíveis para o produto selecionado
+            this.getCores(index);
+            
+            // Chame a função para adicionar o produto à lista de produtos selecionados
+            this.armazenarProdutoTemporariamente (index);
+          },
+          armazenarProdutoTemporariamente(index) {
+            this.indiceProdutoTemporario = index;
+        },
+          armazenarCorTemporariamente(index) {
+            this.indiceCorTemporario = index;
+          },
+        adicionarCor() {
+            if (this.indiceProdutoTemporario === null) {
+                console.error('Índice do produto temporário não está definido.');
+                return;
+            }
+            const produtoSelecionado = this.produtos[this.indiceProdutoTemporario];
+            const corSelecionada = this.cores[this.indiceCorTemporario]; // Ou qualquer outra maneira de obter a cor selecionada
+            const quantidadeDef = this.quantidadeProduto;
+            const quantidade = parseInt(quantidadeDef);
+            // Verifique se o produto e a cor selecionados existem e são válidos
+            if (!produtoSelecionado || !corSelecionada) {
+                console.error('Produto ou cor selecionada não encontrados.');
+                return;
+            }
+    
+            // Agora você tem o produto selecionado e a cor selecionada
+            // Adicione a lógica para adicionar o produto com a cor selecionada à lista de produtos selecionados
+            const produtoComCor = {
+                id: produtoSelecionado.id,
+                nome: produtoSelecionado.nome,
+                preco: produtoSelecionado.preco,
+                referencia: produtoSelecionado.referencia,
+                quantidade: quantidade, // Defina a quantidade conforme necessário
+                corID: corSelecionada.corId, // Supondo que você tenha um ID para a cor
+                cor: corSelecionada.cor, // Ou qualquer outro atributo que represente a cor selecionada
+                // Outros atributos do produto, como grade, podem ser adicionados aqui conforme necessário
+            };
+    
+            // Adicione o produto com a cor selecionada à lista de produtos selecionados
+            this.produtosSelecionados.push(produtoComCor);
+    
+            // Limpe o índice do produto temporário para uso futuro
+            this.indiceProdutoTemporario = null;
+    
+            // Exemplo de console.log para verificar o produto adicionado
+            console.log('Produto com cor selecionada:', produtoComCor);
+            console.log('Lista de produtos selecionados:', this.produtosSelecionados);
+            // Chame a função para calcular o total, se necessário
+            this.calcularTotal();
+        },
+          async getClientes(){
+  
+            const config = {
+                headers: {
+                  'Content-Type': 'Application/json'
+                },
+                method: 'GET'
+            }
+  
+            const response = await fetch(`${URL}/clientes`, config);
+            const data =  await response.json();
+            this.dadosClientes = data;
+            console.log(this.dadosClientes);
+            
+  
+          },
+          async getVendedor(){
+  
+            const config = {
+                headers: {
+                  'Content-Type': 'Application/json'
+                },
+                method: 'GET'
+            }
+  
+            const response = await fetch(`${URL}/vendedores`, config);
+            const data =  await response.json();
+            this.vendedores = data;
+            console.log(this.vendedores);
+            
+  
           },
 
-        async getClientes(){
+ 
+          //   const config = {
+          //       headers: {
+          //         'Content-Type': 'Application/json'
+          //       },
+          //       method: 'GET'
+          //   }
 
-          const config = {
-              headers: {
-                'Content-Type': 'Application/json'
-              },
-              method: 'GET'
-          }
-
-          const response = await fetch(`${URL}/clientes`, config);
-          const data =  await response.json();
-          this.dadosClientes = data;
-          console.log(this.dadosClientes);
-          
-
-        },
-        async getVendedor(){
-
-          const config = {
-              headers: {
-                'Content-Type': 'Application/json'
-              },
-              method: 'GET'
-          }
-
-          const response = await fetch(`${URL}/vendedores`, config);
-          const data =  await response.json();
-          this.vendedores = data;
-          console.log(this.vendedores);
-          
-
-        },
-
+          //   const response = await fetch(`${URL}/exibir`, config);
+          //   const data =  await response.json();
+          //   this.produtosExibir = data;
+          //   console.log(this.produtosExibir);
+          // },
+          async getCores (index){
+            
+            const config = {
+                headers: {
+                  'Content-Type': 'Application/json'
+                },
+                method: 'GET'
+            }
+            const response = await fetch(`${URL}/cores/${this.produtos[index].referencia}`, config);
+            const data =  await response.json();
+            this.cores = data;
+          },
           aplicarDesconto(index) {
             const idDesconto = 'descontos_' + index;
             const valorDesconto = document.getElementById(idDesconto).value;
@@ -150,6 +202,27 @@ new Vue({
               this.produtos = this.produtos.filter(item => item.nome.toLowerCase().includes(this.search.toLowerCase()));
             }
           },
+          pesquisarCor(val){
+            this.searchCor = val;
+            console.log(this.searchCor);
+            console.log(val);
+            if (this.searchCor.length === 0 ) {
+              this.getCores();
+            } else {
+              this.cores = this.cores.filter(item => item.cor.toLowerCase().includes(this.searchCor.toLowerCase()));
+            }
+
+          },
+          pesquisarCliente(valor){
+            this.searchCliente = valor;
+            console.log(this.search);
+            console.log(valor);
+            if (this.searchCliente.length === 0 ) {
+              this.getClientes();
+            } else {
+              this.dadosClientes = this.dadosClientes.filter(cliente => cliente.nome.toLowerCase().includes(this.searchCliente.toLowerCase()));
+            }
+          },
           async salvarVenda(){
             const formaPag = document.getElementById('inputGroupSelect01').value;
             console.log(formaPag);
@@ -196,23 +269,8 @@ new Vue({
             // Fechar o modal após selecionar um cliente
             
           },
-          limparCampos() {
-            this.$refs.cnpj.value = '';
-            this.$refs.address.value = '';
-            this.$refs.city.value = '';
-            this.$refs.phone.value = '';
-          },
 
-            pesquisarCliente(val){
-              this.searchCliente = val;
-              console.log(this.search);
-              console.log(val);
-              if (this.searchCliente.length === 0 ) {
-                this.getClientes();
-              } else {
-                this.dadosClientes = this.dadosClientes.filter(cliente => cliente.nome.toLowerCase().includes(this.searchCliente.toLowerCase()));
-              }
-            },
+
 
           async getPagamentos() {
             const config = {
@@ -239,12 +297,6 @@ new Vue({
         this.getPagamentos();
         this.getClientes();
         this.getVendedor();
-        this.$refs.clienteNome.addEventListener('input', () => {
-          if (!this.$refs.clienteNome.value.trim()) {
-            this.limparCampos();
-          }});
-        
-        
     },
     watch: {
       produtosSelecionados: {
@@ -254,8 +306,10 @@ new Vue({
         deep: true // Este é o ponto crucial para garantir a detecção de mudanças profundas
       },
       search: 'pesquisarProduto',
-      searchCliente: 'pesquisarCliente'
+      searchCliente: 'pesquisarCliente',
+      searchCor:'pesquisarCor',
 
     }
 
 });
+
